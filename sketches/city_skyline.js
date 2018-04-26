@@ -23,7 +23,7 @@ var sketch = function (p) {
         // GUI prep.
         gui = new dat.GUI( { autoPlace: false } );
         var guiElt = gui.domElement;
-        document.getElementById('p5-sketch').appendChild(guiElt);
+        // document.getElementById('p5-sketch').appendChild(guiElt);
         guiElt.style.position = 'fixed';
         guiElt.style.left = '0px';
         guiElt.style.top = '0px';
