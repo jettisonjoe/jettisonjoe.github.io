@@ -1,0 +1,38 @@
+ <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>P5.js Sketch</title>
+
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+
+    <!-- p5.js hosted -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.19/p5.js" type="text/javascript"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.19/addons/p5.dom.js" type="text/javascript"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.19/addons/p5.sound.js" type="text/javascript"></script> -->
+
+    <!-- p5.js local copies -->
+    <!-- <script src="/libraries/p5.js" type="text/javascript"></script> -->
+    <!-- <script src="/libraries/p5.dom.js" type="text/javascript"></script> -->
+    <!-- <script src="/libraries/p5.sound.js" type="text/javascript"></script> -->
+
+    <!-- chroma.js local copy -->
+    <script type="text/javascript" src="/libs/chroma.js" ></script>
+    <!-- dat.gui local copy -->
+    <script type="text/javascript" src="/libs/dat.gui.js"></script>
+
+    <script type="text/javascript">
+        var scriptTag = document.createElement('script');
+            scriptTag.src = "/sketches/city_skyline.js"; // Get this from URL params
+
+            scriptTag.onload = function() {
+                var p5sketch = new p5(sketch, 'p5-sketch');
+            }
+
+            document.body.appendChild(scriptTag);
+    </script>
+  </head>
+  <body>
+    <div id="p5-sketch"></div>
+  </body>
+</html>
