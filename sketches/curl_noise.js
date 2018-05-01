@@ -17,16 +17,10 @@ var sketch = function (p) {
     ////////////////////////////////////////////////////////////////////////////
     // Sets up sketch.
     p.setup = function () {
-        // Infastructure boilerplate
-        var div = p.createDiv(' '),
-            canvas = p.createCanvas(
-                document.getElementsByTagName('html')[0].clientWidth,
-                document.getElementsByTagName('html')[0].clientHeight
-            );
-        div.id('subpage-content');
-        div.style('background-color', '#000000');
-        div.child(canvas);
-        // Sketch setup
+        p.createCanvas(
+            document.getElementsByTagName('html')[0].clientWidth,
+            document.getElementsByTagName('html')[0].clientHeight
+        );
         var seed = (Math.random() * 4294967296)  >>> 0;
         p.noiseSeed(seed);
         p.colorMode(p.HSB, 360, 100, 100, 1);
