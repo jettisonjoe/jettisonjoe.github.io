@@ -129,7 +129,4 @@ var sketch = function (p) {
             polarities[i] *= -1;
         }
     }
-    ////////////////////////////////////////////////////////////////////////////
-    // Public API
-    subpage.title = title;
 };
