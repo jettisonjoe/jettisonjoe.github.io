@@ -16,8 +16,6 @@ var sketch = function (p) {
   const TITLE_RIGHT_PATH = 'assets/img/vintage_win_border_title_right.png';
   const TITLE_PATH = 'assets/img/vintage_win_border_title.png';
 
-  const BACKGROUND_COLOR = '#93a1a1';
-
   var topLeftImg,
       topRightImg,
       topImg,
@@ -55,9 +53,6 @@ var sketch = function (p) {
   };
 
   p.draw = function () {
-    if (BACKGROUND_COLOR) {
-      p.background(BACKGROUND_COLOR);
-    }
     p.image(topLeftImg, 0, 0);
     p.image(topRightImg, p.windowWidth - topRightImg.width, 0);
     p.image(topImg,
