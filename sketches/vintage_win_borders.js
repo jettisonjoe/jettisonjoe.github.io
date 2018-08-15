@@ -53,6 +53,8 @@ var sketch = function (p) {
   };
 
   p.draw = function () {
+    p.noLoop();
+
     p.image(topLeftImg, 0, 0);
     p.image(topRightImg, p.windowWidth - topRightImg.width, 0);
     p.image(topImg,
@@ -105,7 +107,6 @@ var sketch = function (p) {
         p.text(titleText, p.windowWidth/2, 30);
       }
     }
-    p.noLoop();
   };
 
   p.windowResized = function () {
