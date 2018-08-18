@@ -9,7 +9,7 @@ var sketch = function (p) {
         particles = [],
         polarities = [],
         ages = [],
-        maxParticles = 2000,
+        maxParticles = 10000,
         maxSpeed = 2,
         barrier,
         barrierSize,
@@ -17,22 +17,19 @@ var sketch = function (p) {
     ////////////////////////////////////////////////////////////////////////////
     // Sets up sketch.
     p.setup = function () {
-        p.createCanvas(
-            document.getElementsByTagName('html')[0].clientWidth,
-            document.getElementsByTagName('html')[0].clientHeight
-        );
+        p.createCanvas(p.windowWidth, p.windowHeight);
         var seed = (Math.random() * 4294967296)  >>> 0;
         p.noiseSeed(seed);
         p.colorMode(p.HSB, 360, 100, 100, 1);
-        winW = document.getElementsByTagName('html')[0].clientWidth;
-        winH = document.getElementsByTagName('html')[0].clientHeight;
+        winW = p.windowWidth;
+        winH = p.windowHeight;
         setSizes();
     };
 
     ////////////////////////////////////////////////////////////////////////////
     // Draws.
     p.draw = function () {
-        p.background(0, 0.02);
+        // p.background(0, 0.02);
         if (particles.length < maxParticles) {
             particles.push(emitter.copy());
             polarities.push(1);
@@ -45,7 +42,7 @@ var sketch = function (p) {
                 vel = curl(loc.x, loc.y, p.frameCount).setMag(maxSpeed);
             vel.mult(polarities[i]);
             loc.add(vel);
-            contain(loc, i);
+            // contain(loc, i);
             p.ellipse(loc.x, loc.y, 2, 2);
             if (ages[i] <= 0) {
                 particles[i] = emitter.copy();
@@ -57,8 +54,8 @@ var sketch = function (p) {
     ////////////////////////////////////////////////////////////////////////////
     // Window resizing logic
     p.windowResized = function () {
-        winW = document.getElementsByTagName('html')[0].clientWidth;
-        winH = document.getElementsByTagName('html')[0].clientHeight;
+        winW = p.windowWidth;
+        winH = p.windowHeight;
         p.resizeCanvas(winW, winH);
         setSizes();
         particles = [];
@@ -104,7 +101,8 @@ var sketch = function (p) {
     // point and width of the modified region of Perlin space (noiseScale).
     function ramp(x, y) {
         var v = barrier.copy().sub(x, y),
-            d = v.mag()-barrierSize/2,
+            d = Math.min(x, winW - x, y, winH - y),
+            // d = v.mag()-barrierSize/2,
             r = d/noiseScale;
         if (r >= 1) { return 1; }
         if (r <= -1) { return -1; }
@@ -115,7 +113,11 @@ var sketch = function (p) {
     function contain(v, i) {
         var d = p5.Vector.sub(barrier, v);
         // Check if particle has moved outside boundary.
-        if (d.mag() >= barrierSize/2) {
+        if (d.x < 0
+            || d.x > winW
+            || d.y < 0
+            || d.y > winH) {
+        // if (d.mag() >= barrierSize/2) {
             // Move particle back inside boundary.
             d.setMag(maxSpeed + 1);
             v.add(d);
