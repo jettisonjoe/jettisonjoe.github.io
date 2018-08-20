@@ -2,9 +2,9 @@ var sketch = function (p) {
     const FRAMERATE = 60;
     const NOISE_SCALE = 0.001;
     const MAX_PARTICLE_COUNT = 2000;
-    const PARTICLE_LIFESPAN = 10 * FRAMERATE;
-    const PARTICLE_SIZE = 16;
-    const PARTICLE_SPEED = 2;
+    const PARTICLE_LIFESPAN = 15 * FRAMERATE;
+    const PARTICLE_SIZE = 64;
+    const PARTICLE_SPEED = 8;
     const START_MARGIN = 0;
 
     var particles = [],
