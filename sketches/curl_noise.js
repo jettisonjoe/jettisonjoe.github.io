@@ -1,36 +1,38 @@
-/* global p5 */
-
 var sketch = function (p) {
+    const FRAMERATE = 60;
     const NOISE_SCALE = 0.001;
     const MAX_PARTICLE_COUNT = 2000;
+    const PARTICLE_LIFESPAN = 10 * FRAMERATE;
     const PARTICLE_SIZE = 16;
     const PARTICLE_SPEED = 2;
-    const MARGIN = 0;
+    const START_MARGIN = 0;
 
-    var winW, winH,
-        particles = [],
+    var particles = [],
         ages = [],
-        polarities = [],
+        colorScale,
         emitter;
 
     p.setup = function () {
+        p.frameRate(FRAMERATE);
         p.createCanvas(p.windowWidth, p.windowHeight);
         var seed = (Math.random() * 4294967296)  >>> 0;
         p.noiseSeed(seed);
-        p.colorMode(p.HSB, 360, 100, 100, 1);
-        winW = p.windowWidth;
-        winH = p.windowHeight;
-        emitter = p.createVector(MARGIN + Math.random() * (winW - 2 * MARGIN),
-                                 MARGIN + Math.random() * (winH - 2 * MARGIN));
+        initParticles_();
     };
 
     p.draw = function () {
+        if (p.frameCount % PARTICLE_LIFESPAN == 0) {
+          initParticles_();
+        }
         if (particles.length < MAX_PARTICLE_COUNT) {
             particles.push(emitter.copy());
-            ages.push(1000);
+            ages.push(PARTICLE_LIFESPAN);
         }
         p.noStroke();
-        p.fill((p.frameCount/10) % 360, 100, 100, 1);
+        var colorIdx = p.map(p.frameCount % PARTICLE_LIFESPAN,
+                             0, PARTICLE_LIFESPAN,
+                             0, 1);
+        p.fill(colorScale(colorIdx).rgb());
         for (var i = 0; i < particles.length; i++) {
             var loc = particles[i];
             var vel = curl(loc.x,
@@ -39,7 +41,6 @@ var sketch = function (p) {
                            rampedPerlinPotential,
                            p).setMag(PARTICLE_SPEED);
             loc.add(vel);
-            // contain(loc, i);
             p.rect(loc.x - PARTICLE_SIZE / 2,
                    loc.y - PARTICLE_SIZE / 2,
                    PARTICLE_SIZE,
@@ -52,13 +53,18 @@ var sketch = function (p) {
     };
 
     p.windowResized = function () {
-        winW = p.windowWidth;
-        winH = p.windowHeight;
-        p.resizeCanvas(winW, winH);
-        winW = p.windowWidth;
-        winH = p.windowHeight;
-        emitter = p.createVector(Math.random() * winW, Math.random() * winH);
+        p.resizeCanvas(p.windowWidth, p.windowHeight);
+        initParticles_();
     };
+
+    function initParticles_() {
+      particles = [];
+      ages = [];
+      emitter = p.createVector(
+          START_MARGIN + Math.random() * (p.width - 2 * START_MARGIN),
+          START_MARGIN + Math.random() * (p.height - 2 * START_MARGIN));
+      colorScale = randomColorScale(p);
+    }
 
     /**
     * Find the curl of the gradient of a potential field via finite difference.
@@ -130,22 +136,24 @@ var sketch = function (p) {
     }
 
     /**
-    * Keep particles inside the barrier.
+    * Return a random chroma.js color scale.
+    *
+    * @param [p5js] A p5.js drawing context.
+    * @param [numColors] Number of colors to use when forming the scale.
     */
-    function contain(v, i) {
-        var d = p.createVector(0, 0);
-        // Check if particle has moved outside of one of the side boundaries.
-        if (v.x <= MARGIN) {
-          d.add(p.createVector(MARGIN - v.x, 0));
-        } else if (v.x >= winW - MARGIN) {
-          d.add(p.createVector(v.x, 0));
-        }
-        // Check if particle has moved outside of the top or bottom boundary.
-        if (v.y <= MARGIN) {
-          d.add(p.createVector(0, MARGIN - v.y));
-        } else if (v.y >= winH - MARGIN) {
-          d.add(p.createVector(0, v.y));
-        }
-        v.add(d);
+    function randomColorScale(p5js, numColors = 4) {
+      var colors = [];
+      for (var i = 0; i < numColors; i++) {
+        colors.push(chroma.random());
+      }
+
+      // Even chance of ascending/descending lightness.
+      if (p5js.random() <= 0.5) {
+        colors.sort(function(a, b) { return b.get('hcl.l') - a.get('hcl.l'); });
+      } else {
+        colors.sort(function(a, b) { return a.get('hcl.l') - b.get('hcl.l'); });
+      }
+      var bez = chroma.bezier(colors);
+      return chroma.scale(bez).correctLightness(true).padding(0.15);
     }
 };
