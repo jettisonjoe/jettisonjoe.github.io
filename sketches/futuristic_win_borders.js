@@ -1,5 +1,5 @@
 var sketch = function (p) {
-  const FONT_PATH = 'assets/fonts/gohufont-uni-11.ttf';
+  const FONT_PATH = 'assets/fonts/Audiowide-Regular.ttf';
   const FONT_COLOR = '#797979';
   const FONT_SIZE = 22;
   const TITLE_MARGIN = 12;
