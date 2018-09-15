@@ -43,7 +43,7 @@ var sketch = function (p) {
     titleRightImg = p.loadImage(TITLE_RIGHT_PATH);
     titleImg = p.loadImage(TITLE_PATH);
 
-    titleText = url.searchParams.get("title") || "  ";
+    titleText = url.searchParams.get("title") || " ";
     font = p.loadFont(FONT_PATH);
   }
 
