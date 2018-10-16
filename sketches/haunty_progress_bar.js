@@ -4,34 +4,35 @@
 *  @param {number} progress The current level of progress.
 **/
 class HauntyProgressBar {
-  static get FONT_SIZE_LARGE() { return 60; }
-  static get MAX_FONT_SMALL() { return 50; }
+  static get FONT_SIZE_LARGE() { return 50; }
+  static get MAX_FONT_SMALL() { return 40; }
+  static get FILL_RATE_PER_S() { return 0.05; }
+  static get RED_COLOR_STRING() { return 'rgb(254,21,107)'; }
+  static get WHITE_COLOR_STRING() { return 'rgb(255,255,226)'; }
 
   /**
   * Initialize the HauntyProgressBar class by preloading variuos resources.
   * @param {object} p An object that implements p5.js's API.
   */
   static preload(p) {
-    // HauntyProgressBar.IMAGE = p.loadImage('');
-    // HauntyProgressBar.FONT = p.loadFont(
-    //     'assets/fonts/Outrun future Bold.otf');
-    // HauntyProgressBar.RED_COLOR_STRING = 'rgb(254,21,107)';
+    HauntyProgressBar.FONT = p.loadFont(
+        'assets/fonts/PermanentMarker-Regular.ttf');
   }
 
   constructor() {
     // super();
     this.goal = null;
     this._progress = 0;
-    this._displayedProgress = 0;
+    this._displayedProgress = null;
   }
 
   set progress(amount) {
     if (amount && this._progress < amount) {
       this._progress = amount;
-    }
-    if (this._displayedProgress == 0) {
-      // The first time progress is really set, don't animate; just initialize.
-      this._displayedProgress = this._progress;
+      if (this._displayedProgress == null) {
+        // The first time progress is really set, don't animate.
+        this._displayedProgress = this._progress;
+      }
     }
   }
 
@@ -45,17 +46,33 @@ class HauntyProgressBar {
   */
   draw(p) {
     // Cannot compute any of the geometry without a goal amount.
-    if (this.goal == null) { return; }
+    if (this.goal == null || this._displayedProgress == null) { return; }
     if (this._displayedProgress < this._progress) {
-      // Add some amount to displayedProgress.
+      var fractionToFill = HauntyProgressBar.FILL_RATE_PER_S / p.frameRate();
+      this._displayedProgress = p.min(
+          this._displayedProgress + (fractionToFill * this.goal),
+          this.goal);
     }
     // Draw the progress bar.
+    p.rectMode(p.CORNER);
+    p.fill(HauntyProgressBar.WHITE_COLOR_STRING);
+    p.rect(20, 20, 300, 400);
+    p.fill(HauntyProgressBar.RED_COLOR_STRING);
+    var fillHeight = 400 * (this._displayedProgress / this.goal);
+    var fillY = 20 + (400 - fillHeight);
+    p.rect(20, fillY, 300, fillHeight);
+    p.textAlign(p.CENTER, p.CENTER);
+    p.textFont(HauntyProgressBar.FONT);
+    p.textSize(HauntyProgressBar.FONT_SIZE_LARGE);
+    p.fill(HauntyProgressBar.WHITE_COLOR_STRING);
+    p.text(
+        '$' + Math.floor(this._displayedProgress).toFixed(0),
+        170, 220);
   }
 }
 
 
 var sketch = function (p) {
-  var previousTotal = null;
   var campaign,
       progressBar;
 
@@ -76,29 +93,16 @@ var sketch = function (p) {
     p.background(127);
 
     campaign.update(p);
-    if (campaign.lastUpdate && previousTotal == null) {
-      progressBar.progress = campaign.raised;
-        // First time reading actual data will set previousTotal non-null.
-        previousTotal = campaign.raised;
-    } else if (campaign.raised && campaign.raised > previousTotal) {
-      var delta = campaign.raised - previousTotal;
-      var idx = 0;
-      while (delta > 0 && idx < campaign.donors.length) {
-        let [name, amount] = campaign.donors[idx];
-        alertQueue.enqueue(new HauntyAlert(name, amount));
-        delta = delta - amount;
-        idx++;
-      }
-      previousTotal = campaign.raised;
+    if (progressBar.goal == null) {
+      progressBar.goal = campaign.goal;
     }
-
-    alertQueue.update(p);
+    progressBar.progress = campaign.raised;
+    progressBar.draw(p);
 
     // DEBUG
-    if (p.frameCount == 2) {
-      alertQueue.enqueue(new HauntyAlert('Griggle Merph', 100.0));
-      alertQueue.enqueue(
-          new HauntyAlert('Jettison Joe The Amazing Bald Eagle', 5.5));
+    if (p.frameCount == 100) {
+      progressBar.progress = progressBar.progress + 100;
+      progressBar.progress = progressBar.progress + 300;
     }
   };
 
