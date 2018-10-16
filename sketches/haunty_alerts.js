@@ -42,7 +42,7 @@ class HauntyAlert extends StreamAlert {
   * Progress this alert's animation.
   * @param {object} p An object that implements p5.js's API.
   */
-  update(p) {
+  draw(p) {
     if (this.isComplete) { return; }
     if (this._t == 0) {
       // First frame of the alert.
@@ -130,13 +130,15 @@ class HauntyAlert extends StreamAlert {
         this.donorName + '\n$' + this.amount,
         p.windowWidth/2, p.windowHeight/2,
         this._xBound, this._yBound);
-    super.update(p);
+    super.draw(p);
   }
 }
 
 
 var sketch = function (p) {
   var previousTotal = null;
+  var campaign,
+      alertQueue;
 
   p.preload = function () {
     HauntyAlert.preload(p);

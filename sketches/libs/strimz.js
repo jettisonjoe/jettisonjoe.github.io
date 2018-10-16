@@ -62,7 +62,7 @@ class StreamAlert {
     this._t = 0;
   }
 
-  update(p) {
+  draw(p) {
     if (this._t >= this.constructor.T_COMPLETE) {
       this.isComplete = true;
     }
@@ -100,7 +100,7 @@ class StreamAlertQueue {
   */
   update(p) {
     if (this._nowPlaying && !this._nowPlaying.isComplete) {
-      this._nowPlaying.update(p);
+      this._nowPlaying.draw(p);
     } else if (this.queue.length > 0) {
       this._nowPlaying = this.queue.shift();
     }
