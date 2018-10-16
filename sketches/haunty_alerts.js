@@ -1,12 +1,10 @@
-/** TODOS
-*  - Make a progress bar that looks nice.
-*  - Find a better font and visual style for the raised/goal text.
-*  - Test live alerts with an actual donation or two.
-*  - Pass in campaign name as a URL parameter.
+/**
+*  A StreamAlert subclass for Ben Haunty's Monster Marathon.
+*  @param {string} donorName The name of the charity donor.
+*  @param {number} amount    The amount of the donation in USD.
 **/
-
 class HauntyAlert extends StreamAlert {
-  static get FONT_SIZE() { return 80; }
+  static get FONT_SIZE() { return 70; }
   static get MAX_FONT_SIZE() { return 800; }
   static get MIN_FONT_SIZE() { return 20; }
 
@@ -14,9 +12,13 @@ class HauntyAlert extends StreamAlert {
   static get T_FADE_OUT() { return 2450; }
   static get T_COMPLETE() { return 2800; }
 
+  /**
+  * Initialize the HauntyAlert class by preloading variuos resources.
+  * @param {object} p An object that implements p5.js's API.
+  */
   static preload(p) {
     HauntyAlert.SOUND = p.loadSound('assets/sounds/werewolf.mp3');
-    HauntyAlert.FONT = p.loadFont('assets/fonts/PermanentMarker-Regular.ttf');
+    HauntyAlert.FONT = p.loadFont('assets/fonts/Outrun future Bold.otf');
     HauntyAlert.RED_COLOR_STRING = 'rgb(254,21,107)';
     HauntyAlert.WHITE_COLOR_STRING = 'rgb(255,255,226)';
     HauntyAlert.BLUE_COLOR_STRING = 'rgb(0,176,255)';
@@ -32,8 +34,14 @@ class HauntyAlert extends StreamAlert {
     this._red = null;
     this._white = null;
     this._blue = null;
+    this._xBound = null;
+    this._yBound = null;
   }
 
+  /**
+  * Progress this alert's animation.
+  * @param {object} p An object that implements p5.js's API.
+  */
   update(p) {
     if (this.isComplete) { return; }
     if (this._t == 0) {
@@ -54,10 +62,22 @@ class HauntyAlert extends StreamAlert {
           this._t,
           0, HauntyAlert.T_HOLD,
           0, 255);
+      this._xBound = p.map(
+          this._t,
+          0, HauntyAlert.T_HOLD,
+          p.windowWidth * (HauntyAlert.MAX_FONT_SIZE / HauntyAlert.FONT_SIZE),
+          p.windowWidth);
+      this._yBound = p.map(
+          this._t,
+          0, HauntyAlert.T_HOLD,
+          p.windowHeight * (HauntyAlert.MAX_FONT_SIZE / HauntyAlert.FONT_SIZE),
+          p.windowHeight);
     } else if (this._t < HauntyAlert.T_FADE_OUT) {
       // Hold period.
       this._textSize = HauntyAlert.FONT_SIZE;
       this._textAlpha = 255;
+      this._xBound = p.windowWidth;
+      this._yBound = p.windowHeight;
     } else if (this._t < HauntyAlert.T_COMPLETE) {
       // Fade-out period.
       this._textSize = p.map(
@@ -68,26 +88,48 @@ class HauntyAlert extends StreamAlert {
           this._t,
           HauntyAlert.T_FADE_OUT, HauntyAlert.T_COMPLETE,
           255, 0);
+      this._xBound = p.map(
+          this._t,
+          HauntyAlert.T_FADE_OUT, HauntyAlert.T_COMPLETE,
+          p.windowWidth,
+          p.windowWidth * (HauntyAlert.MIN_FONT_SIZE / HauntyAlert.FONT_SIZE));
+      this._yBound = p.map(
+          this._t,
+          HauntyAlert.T_FADE_OUT, HauntyAlert.T_COMPLETE,
+          p.windowHeight,
+          p.windowHeight * (HauntyAlert.MIN_FONT_SIZE / HauntyAlert.FONT_SIZE));
     } else {
       // Complete.
       this._textAlpha = 0;
       this._sound.stop();
     }
     p.textAlign(p.CENTER, p.CENTER);
+    p.rectMode(p.CENTER);
     p.textFont(HauntyAlert.FONT);
     p.textSize(this._textSize);
+    // Blue text component.
+    this._blue.setAlpha(0);
+    p.fill(this._blue);
+    p.text(
+        this.donorName + '\n$' + this.amount,
+        p.windowWidth/2 - this._textSize / 20,
+        p.windowHeight/2 - this._textSize / 20,
+        this._xBound, this._yBound);
+    // Red text component.
     this._red.setAlpha(this._textAlpha);
     p.fill(this._red);
     p.text(
         this.donorName + '\n$' + this.amount,
         p.windowWidth/2 + this._textSize / 20,
-        p.windowHeight/2 + this._textSize / 20);
+        p.windowHeight/2 + this._textSize / 20,
+        this._xBound, this._yBound);
+    // White text component.
     this._white.setAlpha(this._textAlpha);
     p.fill(this._white);
     p.text(
         this.donorName + '\n$' + this.amount,
-        p.windowWidth/2,
-        p.windowHeight/2);
+        p.windowWidth/2, p.windowHeight/2,
+        this._xBound, this._yBound);
     super.update(p);
   }
 }
@@ -98,7 +140,8 @@ var sketch = function (p) {
 
   p.preload = function () {
     HauntyAlert.preload(p);
-    campaign = new ScratoCampaign('krista-and-luis', 6000);
+    let campaignName = url.searchParams.get('campaign') || 'scrato';
+    campaign = new ScratoCampaign(campaignName, 6000);
     campaign.update(p); // Initial update.
     alertQueue = new StreamAlertQueue();
   }
@@ -108,11 +151,11 @@ var sketch = function (p) {
   };
 
   p.draw = function () {
-    // p.clear();
-    p.background(127);
+    p.clear();
+    // p.background(127);
 
     campaign.update(p);
-    if (previousTotal == null) {
+    if (campaign.lastUpdate && previousTotal == null) {
         // First time reading actual data will set previousTotal non-null.
         previousTotal = campaign.raised;
     } else if (campaign.raised && campaign.raised > previousTotal) {
@@ -131,8 +174,9 @@ var sketch = function (p) {
 
     // DEBUG
     if (p.frameCount == 2) {
-      alertQueue.enqueue(new HauntyAlert('Griggle', 100.0));
-      alertQueue.enqueue(new HauntyAlert('Merph', 200.5));
+      alertQueue.enqueue(new HauntyAlert('Griggle Merph', 100.0));
+      alertQueue.enqueue(
+          new HauntyAlert('Jettison Joe The Amazing Bald Eagle', 5.5));
     }
   };
 

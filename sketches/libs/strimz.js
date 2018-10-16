@@ -9,10 +9,10 @@ class ScratoCampaign {
   constructor(campaignName, rateLimitMs) {
     this.campaignName = campaignName;
     this.url = ScratoCampaign.BASE_URL + campaignName;
+    this.lastUpdate = null;
     this._state = null;
     this._rateLimitMs = rateLimitMs;
     this._inProgress = false;
-    this._lastUpdate = null;
   }
 
   get goal() { return this._state && this._state['goal']; }
@@ -23,8 +23,8 @@ class ScratoCampaign {
   * Returns true iff making a request now would exceed our rate limit.
   */
   _rateLimited() {
-    return (this._lastUpdate != null
-            && Date.now() <= this._lastUpdate + this._rateLimitMs);
+    return (this.lastUpdate != null
+            && Date.now() <= this.lastUpdate + this._rateLimitMs);
   }
 
   /**
@@ -45,7 +45,7 @@ class ScratoCampaign {
         function(response) {
           this._state = response;
           this._inProgress = false;
-          this._lastUpdate = Date.now();
+          this.lastUpdate = Date.now();
         }.bind(this));
   }
 }
