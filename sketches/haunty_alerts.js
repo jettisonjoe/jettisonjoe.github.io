@@ -107,25 +107,22 @@ class HauntyAlert extends StreamAlert {
     p.rectMode(p.CENTER);
     p.textFont(HauntyAlert.FONT);
     p.textSize(this._textSize);
-    // Blue text component.
-    this._blue.setAlpha(0);
+    this._red.setAlpha(this._textAlpha);
+    this._white.setAlpha(this._textAlpha);
+    this._blue.setAlpha(this._textAlpha);
+
+    p.noStroke();
     p.fill(this._blue);
     p.text(
         this.donorName + '\n$' + this.amount,
-        p.windowWidth/2 - this._textSize / 20,
-        p.windowHeight/2 - this._textSize / 20,
+        p.windowWidth/2 + this._textSize/15,
+        p.windowHeight/2 + this._textSize/15,
         this._xBound, this._yBound);
-    // Red text component.
-    this._red.setAlpha(this._textAlpha);
+
+    p.stroke(this._white);
+    p.strokeWeight(this._textSize/20);
+
     p.fill(this._red);
-    p.text(
-        this.donorName + '\n$' + this.amount,
-        p.windowWidth/2 + this._textSize / 20,
-        p.windowHeight/2 + this._textSize / 20,
-        this._xBound, this._yBound);
-    // White text component.
-    this._white.setAlpha(this._textAlpha);
-    p.fill(this._white);
     p.text(
         this.donorName + '\n$' + this.amount,
         p.windowWidth/2, p.windowHeight/2,

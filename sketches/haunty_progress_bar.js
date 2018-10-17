@@ -1,3 +1,110 @@
+class Bubble {
+  static get SCALAR() { return 1/12000; }
+  static get SPEED() { return 1.2; }
+
+  static preload(p) {
+    Bubble.OUTER_FILL = p.color(255, 255, 255, 90);
+    Bubble.INNER_FILL = p.color(254, 21, 107);
+  }
+
+  constructor(p, x, y, k) {
+    this.pos = p.createVector(x, y);
+    this.popped = false;
+    this._left = 0;
+    this._right = 0;
+    this._top = 0;
+    this._bot = 0;
+    this._k = k;
+    this._t = 0;
+    this._innerR = 0;
+    this._outerR = 0;
+    this._offset = p.createVector(1, 1);
+    this._offset.heading(p.random(0, 2*Math.PI));
+  }
+
+  setBounds(x1, x2, y1, y2) {
+    this._left = x1;
+    this._right = x2;
+    this._top = y1;
+    this._bot = y2;
+  }
+
+  isInBounds() {
+    var buffer = this._outerR * Bubble.SCALAR * this._k;
+    return (
+        this.pos.x > this._left + buffer
+        && this.pos.x < this._right - buffer
+        && this.pos.y > this._top + buffer
+        && this.pos.y < this._bot - buffer);
+  }
+
+  draw(p) {
+    // move
+    this.pos.x += p.random([-1, 1]);
+    this.pos.y -= Bubble.SPEED;
+
+    // expand
+    this._t++;
+    this._innerR = (this._t * this._t);
+    this._outerR = (this._t * 100);
+
+    // maybe pop
+    if (this._innerR >= this._outerR || !this.isInBounds()) {
+      this.popped = true;
+      return;
+    }
+
+    // maybe render
+    this._offset.rotate(p.random(-0.2, 0.2));
+    this._offset.setMag(
+        (this._outerR - this._innerR) * Bubble.SCALAR * this._k);
+    p.ellipseMode(p.RADIUS);
+    p.noStroke();
+    p.fill(Bubble.OUTER_FILL);
+    p.ellipse(this.pos.x, this.pos.y,
+              this._outerR * Bubble.SCALAR * this._k,
+              this._outerR * Bubble.SCALAR * this._k);
+    p.fill(Bubble.INNER_FILL);
+    p.ellipse(this.pos.x + this._offset.x, this.pos.y + this._offset.y,
+              this._innerR * Bubble.SCALAR * this._k,
+              this._innerR * Bubble.SCALAR * this._k);
+  }
+}
+
+class BubbleSystem {
+  constructor(p, x, y, w, h, r, n) {
+    this.pos = p.createVector(x, y);
+    this.size = p.createVector(w, h);
+    this._r = r;
+    this._n = n;
+    this._bubbles = new Array(n);
+    for (var i = 0; i < this._n; i++) {
+      this._bubbles[i] = this._makeNewBubble(p);
+    }
+  }
+
+  draw(p) {
+    // if (p.frameCount > 200) { debugger; }
+    for (var i = 0; i < this._n; i++) {
+      if (this._bubbles[i].popped) {
+          this._bubbles[i] = this._makeNewBubble(p);
+      }
+      this._bubbles[i].setBounds(this.pos.x, this.pos.x + this.size.x,
+                                 this.pos.y, this.pos.y + this.size.y);
+      this._bubbles[i].draw(p);
+    }
+  }
+
+  _makeNewBubble(p) {
+    return new Bubble(
+        p,
+        p.random(this.pos.x, this.pos.x + this.size.x),
+        p.random(this.pos.y, this.pos.y + this.size.y),
+        this._n);
+  }
+}
+
+
 /**
 *  A progress bar for Ben Haunty's Monster Marathon for Charity.
 *  @param {number} goal     The goal amount for the progress bar.
@@ -17,13 +124,15 @@ class HauntyProgressBar {
   static preload(p) {
     HauntyProgressBar.FONT = p.loadFont(
         'assets/fonts/PermanentMarker-Regular.ttf');
+    Bubble.preload(p);
   }
 
-  constructor() {
+  constructor(p) {
     // super();
     this.goal = null;
     this._progress = 0;
     this._displayedProgress = null;
+    this._bubbles = new BubbleSystem(p, 20, 20, 300, 400, 1.5, 12);
   }
 
   set progress(amount) {
@@ -55,16 +164,23 @@ class HauntyProgressBar {
     }
     // Draw the progress bar.
     p.rectMode(p.CORNER);
+    p.noStroke();
     p.fill(HauntyProgressBar.WHITE_COLOR_STRING);
     p.rect(20, 20, 300, 400);
     p.fill(HauntyProgressBar.RED_COLOR_STRING);
     var fillHeight = 400 * (this._displayedProgress / this.goal);
     var fillY = 20 + (400 - fillHeight);
     p.rect(20, fillY, 300, fillHeight);
+
+    this._bubbles.pos = p.createVector(20, fillY);
+    this._bubbles.size = p.createVector(300, fillHeight);
+    this._bubbles.draw(p);
+
     p.textAlign(p.CENTER, p.CENTER);
     p.textFont(HauntyProgressBar.FONT);
     p.textSize(HauntyProgressBar.FONT_SIZE_LARGE);
-    p.fill(HauntyProgressBar.WHITE_COLOR_STRING);
+    p.fill(0);
+    p.stroke(255)
     p.text(
         '$' + Math.floor(this._displayedProgress).toFixed(0),
         170, 220);
@@ -81,11 +197,11 @@ var sketch = function (p) {
     let campaignName = url.searchParams.get('campaign') || 'scrato';
     campaign = new ScratoCampaign(campaignName, 6000);
     campaign.update(p); // Initial update.
-    progressBar = new HauntyProgressBar();
   }
 
   p.setup = function () {
     p.createCanvas(p.windowWidth, p.windowHeight);
+    progressBar = new HauntyProgressBar(p);
   };
 
   p.draw = function () {
