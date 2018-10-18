@@ -112,7 +112,7 @@ class BubbleSystem {
 **/
 class HauntyProgressBar {
   static get FONT_SIZE_LARGE() { return 50; }
-  static get MAX_FONT_SMALL() { return 40; }
+  static get FONT_SIZE_SMALL() { return 24; }
   static get FILL_RATE_PER_S() { return 0.05; }
   static get RED_COLOR_STRING() { return 'rgb(254,21,107)'; }
   static get WHITE_COLOR_STRING() { return 'rgb(255,255,226)'; }
@@ -122,17 +122,23 @@ class HauntyProgressBar {
   * @param {object} p An object that implements p5.js's API.
   */
   static preload(p) {
+    HauntyProgressBar.JAR = p.loadImage('assets/img/haunty_jar.png');
+    HauntyProgressBar.JAR_BG = p.loadImage('assets/img/haunty_jar_bg.png');
     HauntyProgressBar.FONT = p.loadFont(
         'assets/fonts/PermanentMarker-Regular.ttf');
     Bubble.preload(p);
   }
 
-  constructor(p) {
+  constructor(p, x, y) {
     // super();
+    this.pos = p.createVector(x, y);
+    this.fluidPos = p.createVector(x + 16, y + 72);
+    this.size = p.createVector(275, 297);
     this.goal = null;
     this._progress = 0;
     this._displayedProgress = null;
-    this._bubbles = new BubbleSystem(p, 20, 20, 300, 400, 1.5, 12);
+    this._bubbles = new BubbleSystem(
+        p, this.pos.x, this.pos.y, this.size.x, this.size.y, 1.5, 12);
   }
 
   set progress(amount) {
@@ -162,19 +168,21 @@ class HauntyProgressBar {
           this._displayedProgress + (fractionToFill * this.goal),
           this.goal);
     }
-    // Draw the progress bar.
-    p.rectMode(p.CORNER);
-    p.noStroke();
-    p.fill(HauntyProgressBar.WHITE_COLOR_STRING);
-    p.rect(20, 20, 300, 400);
-    p.fill(HauntyProgressBar.RED_COLOR_STRING);
-    var fillHeight = 400 * (this._displayedProgress / this.goal);
-    var fillY = 20 + (400 - fillHeight);
-    p.rect(20, fillY, 300, fillHeight);
 
-    this._bubbles.pos = p.createVector(20, fillY);
-    this._bubbles.size = p.createVector(300, fillHeight);
+    p.image(HauntyProgressBar.JAR_BG, this.pos.x, this.pos.y);
+
+    // Draw the progress bar.
+    p.noStroke();
+    p.fill(HauntyProgressBar.RED_COLOR_STRING);
+    var fillHeight = this.size.y * (this._displayedProgress / this.goal);
+    var fillY = this.fluidPos.y + (this.size.y - fillHeight);
+    p.rect(this.fluidPos.x, fillY, this.size.x, fillHeight);
+
+    this._bubbles.pos = p.createVector(this.fluidPos.x, fillY);
+    this._bubbles.size = p.createVector(this.size.x, fillHeight);
     this._bubbles.draw(p);
+
+    p.image(HauntyProgressBar.JAR, this.pos.x, this.pos.y);
 
     p.textAlign(p.CENTER, p.CENTER);
     p.textFont(HauntyProgressBar.FONT);
@@ -183,7 +191,10 @@ class HauntyProgressBar {
     p.stroke(255)
     p.text(
         '$' + Math.floor(this._displayedProgress).toFixed(0),
-        170, 220);
+        this.pos.x + 130, this.pos.y + 195);
+    p.textSize(HauntyProgressBar.FONT_SIZE_SMALL);
+    p.text('/ ' + Math.floor(this.goal).toFixed(0),
+           this.pos.x + 210, this.pos.y + 248);
   }
 }
 
@@ -201,7 +212,8 @@ var sketch = function (p) {
 
   p.setup = function () {
     p.createCanvas(p.windowWidth, p.windowHeight);
-    progressBar = new HauntyProgressBar(p);
+    progressBar = new HauntyProgressBar(p, 10, 10);
+    p.rectMode(p.CORNER);
   };
 
   p.draw = function () {
