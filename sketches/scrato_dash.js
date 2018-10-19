@@ -59,7 +59,7 @@ class ScratoDash {
 
     for (var i = 0; i < this._campaign.donors.length; i++) {
       let [name, amount] = this._campaign.donors[i];
-      p.text('    ' + name + '  ' + amount, this._pos.x, lineY);
+      p.text('    ' + name + '  $' + amount.toFixed(2), this._pos.x, lineY);
       lineY += ScratoDash.LINE_SPACING * ScratoDash.FONT_SIZE;
     }
   }
