@@ -132,7 +132,7 @@ class HauntyProgressBar {
   constructor(p, x, y) {
     // super();
     this.pos = p.createVector(x, y);
-    this.fluidPos = p.createVector(x + 16, y + 72);
+    this.fluidPos = p.createVector(x + 16, y + 75);
     this.size = p.createVector(275, 297);
     this.goal = null;
     this._progress = 0;
@@ -217,8 +217,8 @@ var sketch = function (p) {
   };
 
   p.draw = function () {
-    // p.clear();
-    p.background(127);
+    p.clear();
+    // p.background(16);
 
     campaign.update(p);
     if (progressBar.goal == null) {
@@ -228,10 +228,10 @@ var sketch = function (p) {
     progressBar.draw(p);
 
     // DEBUG
-    if (p.frameCount == 100) {
-      progressBar.progress = progressBar.progress + 100;
-      progressBar.progress = progressBar.progress + 300;
-    }
+    // if (p.frameCount == 100) {
+    //   progressBar.progress = progressBar.progress + 100;
+    //   progressBar.progress = progressBar.progress + 300;
+    // }
   };
 
   p.windowResized = function () {

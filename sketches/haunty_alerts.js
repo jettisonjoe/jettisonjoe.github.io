@@ -34,6 +34,7 @@ class HauntyAlert extends StreamAlert {
     this._red = null;
     this._white = null;
     this._blue = null;
+    this._black = null;
     this._xBound = null;
     this._yBound = null;
   }
@@ -49,6 +50,7 @@ class HauntyAlert extends StreamAlert {
       this._red = p.color(HauntyAlert.RED_COLOR_STRING);
       this._white = p.color(HauntyAlert.WHITE_COLOR_STRING);
       this._blue = p.color(HauntyAlert.BLUE_COLOR_STRING);
+      this._black = p.color(0);
       this._textAlpha = 0;
       this._sound.play();
     }
@@ -110,19 +112,20 @@ class HauntyAlert extends StreamAlert {
     this._red.setAlpha(this._textAlpha);
     this._white.setAlpha(this._textAlpha);
     this._blue.setAlpha(this._textAlpha);
+    this._black.setAlpha(this._textAlpha);
 
     p.noStroke();
-    p.fill(this._blue);
+    p.fill(this._black);
     p.text(
         this.donorName + '\n$' + this.amount,
-        p.windowWidth/2 + this._textSize/15,
-        p.windowHeight/2 + this._textSize/15,
+        p.windowWidth/2 + this._textSize/6,
+        p.windowHeight/2 + this._textSize/6,
         this._xBound, this._yBound);
 
-    p.stroke(this._white);
-    p.strokeWeight(this._textSize/20);
+    p.stroke(this._black);
+    p.strokeWeight(this._textSize/6);
 
-    p.fill(this._red);
+    p.fill(this._blue);
     p.text(
         this.donorName + '\n$' + this.amount,
         p.windowWidth/2, p.windowHeight/2,
@@ -174,8 +177,6 @@ var sketch = function (p) {
     // DEBUG
     if (p.frameCount == 2) {
       alertQueue.enqueue(new HauntyAlert('Griggle Merph', 100.0));
-      alertQueue.enqueue(
-          new HauntyAlert('Jettison Joe The Amazing Bald Eagle', 5.5));
     }
   };
 
