@@ -29,6 +29,7 @@ class HauntyAlert extends StreamAlert {
     this.donorName = donorName;
     this.amount = Math.floor(amount).toFixed(0);
     this._sound = HauntyAlert.SOUND;
+    this._sound.setVolume(0.25);
     this._textAlpha = null;
     this._textSize = HauntyAlert.FONT_SIZE;
     this._red = null;
@@ -176,7 +177,7 @@ var sketch = function (p) {
 
     // DEBUG
     if (p.frameCount == 2) {
-      alertQueue.enqueue(new HauntyAlert('Griggle Merph', 100.0));
+      // alertQueue.enqueue(new HauntyAlert('Griggle Merph', 100.0));
     }
   };
 
