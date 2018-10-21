@@ -174,7 +174,8 @@ class HauntyProgressBar {
     // Draw the progress bar.
     p.noStroke();
     p.fill(HauntyProgressBar.RED_COLOR_STRING);
-    var fillHeight = this.size.y * (this._displayedProgress / this.goal);
+    var multiplier = p.min(this._displayedProgress / this.goal, 1);
+    var fillHeight = this.size.y * multiplier;
     var fillY = this.fluidPos.y + (this.size.y - fillHeight);
     p.rect(this.fluidPos.x, fillY, this.size.x, fillHeight);
 
