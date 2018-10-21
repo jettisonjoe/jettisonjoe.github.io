@@ -142,7 +142,7 @@ class HauntyProgressBar {
   }
 
   set progress(amount) {
-    if (amount) {
+    if (amount && this._progress < amount) {
       this._progress = amount;
       if (this._displayedProgress == null) {
         // The first time progress is really set, don't animate.
@@ -166,7 +166,7 @@ class HauntyProgressBar {
       var fractionToFill = HauntyProgressBar.FILL_RATE_PER_S / p.frameRate();
       this._displayedProgress = p.min(
           this._displayedProgress + (fractionToFill * this.goal),
-          this.goal);
+          this.progress);
     }
 
     p.image(HauntyProgressBar.JAR_BG, this.pos.x, this.pos.y);
