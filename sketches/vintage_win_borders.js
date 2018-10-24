@@ -1,8 +1,7 @@
 var sketch = function (p) {
-  // const FONT_PATH = 'assets/fonts/gohufont-uni-11.ttf';
-  const FONT_PATH = 'assets/fonts/C64_Pro_Mono-STYLE.ttf';
+  const FONT_PATH = 'assets/fonts/gohufont-uni-11.ttf';
   const FONT_COLOR = '#93a1a1';
-  const FONT_SIZE = 24;
+  const FONT_SIZE = 33;
   const TITLE_MARGIN = 30;
 
   const TOP_LEFT_PATH = 'assets/img/vintage_win_border_top_left.png';
