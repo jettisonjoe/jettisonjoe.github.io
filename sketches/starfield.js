@@ -4,7 +4,7 @@ var sketch = function (p) {
       palmtree;
 
   p.preload = function() {
-    palmtree = p.loadImage('/assets/img/palm_silhouette.png');
+    palmtree = p.loadImage('assets/img/palm_silhouette.png');
   }
 
   p.setup = function () {
