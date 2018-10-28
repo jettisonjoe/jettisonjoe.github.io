@@ -48,7 +48,8 @@ var sketch = function (p) {
     p.noLoop();
     p.noStroke();
 
-    p.background(BG_COLOR);
+    // p.background(BG_COLOR);
+    p.clear();
     p.textFont(font);
     p.textSize(FONT_SIZE);
     p.textAlign(p.CENTER);
