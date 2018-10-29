@@ -48,7 +48,7 @@ class Starfield {
 
 
 class ScrollingGradient {
-  static get SCROLL_SPEED() { return 0.25; }
+  static get SCROLL_SPEED() { return 25; }
 
   constructor(p, x, y, w, h, gradientHeight, colorScale) {
     this.pos = p.createVector(x, y);
@@ -92,13 +92,18 @@ class ScrollingGradient {
 
 
 function createGradient(p, w, h, colorScale) {
-  let graphic = p.createGraphics(w, h);
-  for (var i = 0; i < h; i++) {
-    graphic.strokeWeight(1);
-    graphic.stroke(colorScale(i / h).rgb());
-    graphic.line(0, i, graphic.width, i);
+  let img = p.createImage(w, h);
+  let noiseScale = 0.004;
+  img.loadPixels();
+  for (var y = 0; y < h; y++) {
+    for (var x = 0; x < w; x++) {
+      let colorIndex = p.constrain(
+          (y / h) + 0.12 * p.noise(noiseScale * x, noiseScale * y), 0, 1);
+      img.set(x, y, p.color(colorScale(colorIndex).rgb()));
+    }
   }
-  return graphic;
+  img.updatePixels();
+  return img;
 }
 
 
