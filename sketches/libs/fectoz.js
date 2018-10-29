@@ -48,7 +48,7 @@ class Starfield {
 
 
 class ScrollingGradient {
-  static get SCROLL_SPEED() { return 25; }
+  static get SCROLL_SPEED() { return 0.25; }
 
   constructor(p, x, y, w, h, gradientHeight, colorScale) {
     this.pos = p.createVector(x, y);
