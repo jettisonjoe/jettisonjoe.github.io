@@ -52,26 +52,27 @@ class ScrollingGradient {
 
   constructor(p, x, y, w, h, gradientHeight, colorScale) {
     this.pos = p.createVector(x, y);
-    this.size = p.createVector(w, h);
+    this.size = p.createVector(p.ceil(w), p.ceil(h));
     this._scroll = 0;
-    this._maxScroll = 2 * gradientHeight;
+    this._maxScroll = 2 * p.ceil(gradientHeight);
 
-    let gradient = createGradient(p, w, gradientHeight, colorScale);
-    this._graphics = p.createGraphics(w, this._maxScroll + h);
+    let gradient = createGradient(
+        p, p.ceil(w), p.ceil(gradientHeight), colorScale);
+    this._graphics = p.createGraphics(
+        p.ceil(w), this._maxScroll + p.ceil(h));
     this._graphics.clear();
     this._graphics.image(gradient, 0, 0);
-    this._graphics.push();
-    this._graphics.translate(w, this._maxScroll);
-    this._graphics.angleMode(p.RADIANS);
-    this._graphics.rotate(Math.PI);
+    this._graphics.push();  
+    this._graphics.translate(0, this._maxScroll);
+    this._graphics.scale(1, -1);
     this._graphics.image(gradient, 0, 0);
     this._graphics.pop();
     this._graphics.image(
         gradient,
         0, this._maxScroll,
-        w, h,
+        p.ceil(w), p.ceil(h),
         0, 0,
-        w, h);
+        p.ceil(w), p.ceil(h));
   }
 
   draw(p) {

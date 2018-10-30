@@ -28,6 +28,7 @@ var sketch = function (p) {
 
   p.draw = function () {
     gradient.draw(p);
+    p.stroke(0);
     starfield.draw(p);
     p.ellipseMode(p.CENTER);
     p.noStroke();
