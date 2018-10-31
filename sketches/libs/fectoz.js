@@ -2,10 +2,9 @@ class Starfield {
   static get MAX_ROT_SPEED() { return 0.001; }
   static get MAX_STARS() { return 30000; }
   static get MAX_STARS_PER_PX() { return 0.001; }
-  static get MAX_STAR_SIZE() { return 5; }
+  static get MAX_STAR_SIZE() { return 3; }
 
-  constructor(p, x, y, r, density, rotSpeed) {
-    this.pos = p.createVector(x, y);
+  constructor(p, r, density, rotSpeed) {
     this._stars = [];
     this._rotation = 0;
     this._rotSpeed = p.constrain(
@@ -29,19 +28,17 @@ class Starfield {
     }
   }
 
-  draw(p) {
+  drawAt(p, x, y) {
     p.push();
+    p.translate(x, y);
     this._rotation -= this._rotSpeed;
-    p.push();
-    p.translate(this.pos.x, this.pos.y);
     p.angleMode(p.RADIANS);
     p.rotate(this._rotation);
     p.stroke(255);
     this._stars.forEach(function(star) {
-      p.strokeWeight(star.size + p.random(-0.5, 0.5));
+      p.strokeWeight(star.size + p.random(-0.25, 0.25));
       p.point(star.pos.x, star.pos.y);
     });
-    p.pop();
     p.pop();
   }
 }
@@ -50,8 +47,7 @@ class Starfield {
 class ScrollingGradient {
   static get SCROLL_SPEED() { return 0.35; }
 
-  constructor(p, x, y, w, h, gradientHeight, colorScale) {
-    this.pos = p.createVector(x, y);
+  constructor(p, w, h, gradientHeight, colorScale) {
     this.size = p.createVector(p.ceil(w), p.ceil(h));
     this._scroll = 0;
     this._maxScroll = 2 * p.ceil(gradientHeight);
@@ -75,11 +71,12 @@ class ScrollingGradient {
         p.ceil(w), p.ceil(h));
   }
 
-  draw(p) {
+  drawAt(p, x, y) {
     p.push();
+    p.translate(x, y);
     p.image(
         this._graphics,
-        this.pos.x, this.pos.y,
+        0, 0,
         this.size.x, this.size.y,
         0, this._scroll,
         this.size.x, this.size.y);
