@@ -69,7 +69,7 @@ var sketch = function (p) {
     p.translate(0, buffer.height - 1);
     p.image(water, 0, 0);
     p.noStroke();
-    p.fill(255, 255, 255, 40);
+    p.fill(0, 15, 30, 40);
     p.rect(0, 0, water.width, water.height);
     p.pop();
 
