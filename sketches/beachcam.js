@@ -1,13 +1,13 @@
 var sketch = function (p) {
   var gradient,
       starfield,
-      palmtree,
+      foreground,
       buffer,
       water,
       lightOrigin;
 
   p.preload = function() {
-    palmtree = p.loadImage('assets/img/palm_silhouette.png');
+    foreground = p.loadImage('assets/img/beach_silhouettes.png');
   }
 
   p.setup = function () {
@@ -24,7 +24,8 @@ var sketch = function (p) {
     p.imageMode(p.CORNER);
     starfield = new Starfield(
         p,
-        p.max(skyWidth, skyHeight) * 2, 0.8, 0.05);
+        Math.sqrt(skyWidth * skyWidth + skyHeight * skyHeight),
+        0.8, 0.05);
     lightOrigin = p.createVector(0, 0);
     lightOrigin.x = p.random(buffer.width);
     lightOrigin.y = p.random(buffer.height);
@@ -50,7 +51,7 @@ var sketch = function (p) {
     water.drawAt(p, 0, 0);
     p.pop();
 
-    p.image(palmtree, 20, p.windowHeight - palmtree.height);
+    p.image(foreground, 0, p.windowHeight - foreground.height);
     // console.log(p.frameRate());
   };
 
