@@ -2,7 +2,7 @@ class Starfield {
   static get MAX_ROT_SPEED() { return 0.001; }
   static get MAX_STARS() { return 30000; }
   static get MAX_STARS_PER_PX() { return 0.001; }
-  static get MAX_STAR_SIZE() { return 3; }
+  static get MAX_STAR_SIZE() { return 2; }
 
   constructor(p, r, density, rotSpeed) {
     this._stars = [];
@@ -36,7 +36,7 @@ class Starfield {
     p.rotate(this._rotation);
     p.stroke(255);
     this._stars.forEach(function(star) {
-      p.strokeWeight(star.size + p.random(-0.25, 0.25));
+      p.strokeWeight(star.size + (Math.random() - 0.5) / 5);
       p.point(star.pos.x, star.pos.y);
     });
     p.pop();
@@ -72,11 +72,9 @@ class ScrollingGradient {
   }
 
   drawAt(p, x, y) {
-    p.push();
-    p.translate(x, y);
     p.image(
         this._graphics,
-        0, 0,
+        x, y,
         this.size.x, this.size.y,
         0, this._scroll,
         this.size.x, this.size.y);
@@ -84,7 +82,6 @@ class ScrollingGradient {
     if (this._scroll >= this._maxScroll) {
       this._scroll = 0;
     }
-    p.pop();
   }
 }
 
@@ -95,9 +92,14 @@ function createGradient(p, w, h, colorScale) {
   img.loadPixels();
   for (var y = 0; y < h; y++) {
     for (var x = 0; x < w; x++) {
+      let idx = 4 * (y * img.width + x);
       let colorIndex = p.constrain(
           (y / h) + 0.12 * p.noise(noiseScale * x, noiseScale * y), 0, 1);
-      img.set(x, y, p.color(colorScale(colorIndex).rgb()));
+      let color = colorScale(colorIndex);
+      img.pixels[idx] = color.get('rgb.r');
+      img.pixels[idx + 1] = color.get('rgb.g');
+      img.pixels[idx + 2] = color.get('rgb.b');
+      img.pixels[idx + 3] = 255;
     }
   }
   img.updatePixels();
@@ -119,4 +121,34 @@ function createRandomBalancedScale(numColors, modeString) {
     return chroma.scale(bez).mode(modeString);
   }
   return chroma.scale(bez).mode('lrgb').padding(0.1);
+}
+
+
+class Water {
+  constructor(p, sourceImage, h) {
+    this._sourceImage = sourceImage;
+    this._image = p.createImage(sourceImage.width, h);
+  }
+
+  drawAt(p, posX, posY) {
+    this._sourceImage.loadPixels();
+    this._image.loadPixels();
+    var src, dest;
+    for (var y = 0; y < this._image.height; y++) {
+      for (var x = 0; x < this._image.width; x++) {
+        dest = 4 * (y * this._image.width + x);
+        src = 4 * ((this._sourceImage.height - y) * this._image.width + x);
+        src -= Math.floor(Math.random() * 16) * (4 * (this._image.width));
+        this._image.pixels[dest] = this._sourceImage.pixels[src];
+        this._image.pixels[dest + 1] = this._sourceImage.pixels[src + 1];
+        this._image.pixels[dest + 2] = this._sourceImage.pixels[src + 2];
+        this._image.pixels[dest + 3] = this._sourceImage.pixels[src + 3] * 0.8;
+      }
+    }
+    this._image.updatePixels();
+    p.image(this._image, posX, posY);
+    p.noStroke();
+    p.fill(0, 15, 30, 40);
+    p.rect(posX, posY, this._image.width, this._image.height);
+  }
 }
