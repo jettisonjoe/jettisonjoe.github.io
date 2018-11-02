@@ -24,6 +24,10 @@ Please keep the link to https://poll.ma.pe visible for a short period of time.
   opacity: 0;
 }
 
+.custom.removing {
+  opacity: 0;
+}
+
 .custom.finished,
 .custom.active {
   opacity: 1;
