@@ -72,7 +72,9 @@ Please keep the link to https://poll.ma.pe visible for a short period of time.
   opacity: 0.3;
 }
 .custom.active .options li.help {
-  height: 25px;
+  font-size: 20;
+  font-weight: normal;
+  height: 35px;
 }
 .custom .options li {
   position: relative;
@@ -145,6 +147,8 @@ Please keep the link to https://poll.ma.pe visible for a short period of time.
   height: 0;
 }
 .custom .credits {
+  color: #002b36;
+  font-weight: bolder;
   text-align: center;
   opacity: 1;
   transition: all 1s;
@@ -201,9 +205,4 @@ Please keep the link to https://poll.ma.pe visible for a short period of time.
 .custom.bottomRight {
   bottom: 20px;
   right: 20px;
-}
-
-div.credits {
-  color: #002b36;
-  font-weight: bolder;
 }
