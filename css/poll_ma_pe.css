@@ -18,6 +18,7 @@ Please keep the link to https://poll.ma.pe visible for a short period of time.
   padding: 10px;
 
   font-family: Share+Tech+Mono;
+  font-weight: bold;
 
   // Hide when not active
   opacity: 0;
@@ -82,7 +83,7 @@ Please keep the link to https://poll.ma.pe visible for a short period of time.
   background: #93a1a1;
   padding-right: 55px;
   padding-left: 55px;
-  font-size: 15px;
+  font-size: 20px;
 }
 .custom .options li.question {
   padding: 10px 20px;
@@ -94,14 +95,14 @@ Please keep the link to https://poll.ma.pe visible for a short period of time.
   position: relative;
 }
 .custom .options li.help {
-  background: brown;
+  background: #93a1a1;
   text-align: center;
   overflow: hidden;
   height: 0;
 }
 .custom .options li.help span {
   display: block;
-  padding: 10px;
+  padding: 20px;
 }
 .custom .options li .procent {
   position: absolute;
@@ -110,18 +111,18 @@ Please keep the link to https://poll.ma.pe visible for a short period of time.
 }
 .custom .options li .number {
   padding: 5px 10px;
-  background: #333;
+  background: #93a1a1;
   position: absolute;
   top: 5px;
   left: 10px;
 }
 .custom .options li .bar {
-  background: #444;
+  background: #839496;
   height: 5px;
   margin-top: 5px;
 }
 .custom .options li .bar .bar-inner {
-  background: #fff;
+  background: #eee8d5;
   height: 100%;
   width: 0;
   transition: width 1s;
@@ -135,7 +136,7 @@ Please keep the link to https://poll.ma.pe visible for a short period of time.
 * Optional outer border
 */
 .custom .border {
-  border: 5px solid red;
+  border: 5px solid #002b36;
 }
 
 
