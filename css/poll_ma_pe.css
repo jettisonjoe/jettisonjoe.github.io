@@ -72,6 +72,7 @@ Please keep the link to https://poll.ma.pe visible for a short period of time.
   opacity: 0.3;
 }
 .custom.active .options li.help {
+  color: #586e75;
   font-size: 20;
   font-weight: normal;
   height: 35px;
