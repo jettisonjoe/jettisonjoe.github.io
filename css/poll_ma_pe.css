@@ -30,12 +30,12 @@ Please keep the link to https://poll.ma.pe visible for a short period of time.
 }
 
 .custom .metaInfo {
-  background: green;
+  background: 93a1a1;
   overflow: hidden;
   padding: 0 10px;
 }
 .custom .total, .custom .duration {
-  background: #444;
+  background: #073642;
   float: left;
   width: 49%;
   text-align: center;
@@ -72,7 +72,7 @@ Please keep the link to https://poll.ma.pe visible for a short period of time.
   opacity: 0.3;
 }
 .custom.active .options li.help {
-  height: 35px;
+  height: 25px;
 }
 .custom .options li {
   position: relative;
@@ -122,7 +122,7 @@ Please keep the link to https://poll.ma.pe visible for a short period of time.
   margin-top: 5px;
 }
 .custom .options li .bar .bar-inner {
-  background: #eee8d5;
+  background: #073642;
   height: 100%;
   width: 0;
   transition: width 1s;
@@ -201,4 +201,9 @@ Please keep the link to https://poll.ma.pe visible for a short period of time.
 .custom.bottomRight {
   bottom: 20px;
   right: 20px;
+}
+
+div.credits {
+  color: #002b36;
+  font-weight: bolder;
 }
