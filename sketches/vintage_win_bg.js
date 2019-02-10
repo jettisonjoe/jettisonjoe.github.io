@@ -2,7 +2,7 @@ var sketch = function (p) {
   const BG_COLOR = '#839496';
 
   const FONT_PATH = 'assets/fonts/gohufont-uni-11.ttf';
-  const FONT_COLOR = '#586e75';
+  const FONT_COLOR = '#073642';
   const FONT_SIZE = 33;
 
   const ICON_SIZE = 112;
@@ -12,36 +12,35 @@ var sketch = function (p) {
 
   const LOADING_BAR_PATH = 'assets/img/loading_bar.gif'
 
-  var font, selectedIconIdx;
+  var font, loadingBarImg;
 
   p.preload = function () {
     font = p.loadFont(FONT_PATH);
-    loadingBarImg = p.loadImage(LOADING_BAR_PATH)
+    loadingBarImg = p.createImg(LOADING_BAR_PATH)
   }
 
   p.setup = function () {
     p.createCanvas(p.windowWidth, p.windowHeight);
     p.imageMode(p.CORNER);
-  };
-
-  p.draw = function () {
-    p.noLoop();
     p.noStroke();
-
     p.background(BG_COLOR);
     p.textFont(font);
     p.textSize(FONT_SIZE);
     p.textAlign(p.CENTER);
+  };
 
-    p.image(
-        loadingBarImg,
+  p.draw = function () {
+    loadingBarImg.position(
         p.windowWidth/2 - loadingBarImg.width/2,
         p.windowHeight/2 - loadingBarImg.height/2);
-    // p.text("please wait...");
+    p.fill(FONT_COLOR);
+    p.text(
+      "please wait...",
+      p.windowWidth/2,
+      p.windowHeight/2 + loadingBarImg.height + FONT_SIZE);
   };
 
   p.windowResized = function () {
     p.resizeCanvas(p.windowWidth, p.windowHeight);
-    p.loop();
   };
 }
