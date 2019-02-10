@@ -19,6 +19,11 @@ var sketch = function (p) {
     loadingBarImg = p.loadImage(LOADING_BAR_PATH)
   }
 
+  p.setup = function () {
+    p.createCanvas(p.windowWidth, p.windowHeight);
+    p.imageMode(p.CORNER);
+  };
+
   p.draw = function () {
     p.noLoop();
     p.noStroke();
