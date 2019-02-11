@@ -89,11 +89,12 @@ var sketch = function (p) {
     p.image(memoDogearImg,
             leftSideImg.width,
             p.windowHeight - bottomImg.height - memoDogearImg.height);
-    p.image(memoBottomImg,
-            leftSideImg.width + memoDogearImg.width,
-            p.windowHeight - bottomImg.height - memoBottomImg.height,
-            p.windowWidth - leftSideImg.width - rightSideImg.width,
-            memoBottomImg.height);
+    p.image(
+        memoBottomImg,
+        leftSideImg.width + memoDogearImg.width,
+        p.windowHeight - bottomImg.height - memoBottomImg.height,
+        p.windowWidth - leftSideImg.width - rightSideImg.width - memoDogearImg.width,
+        memoBottomImg.height);
 
     if (titleText) {
       var titleSidesWidth = titleLeftImg.width + titleRightImg.width;
