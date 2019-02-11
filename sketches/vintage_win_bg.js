@@ -30,7 +30,9 @@ var sketch = function (p) {
   };
 
   p.draw = function () {
-    p.noLoop();
+    if (p.frameCount > 300) {
+      p.noLoop();
+    }
     p.fill(FONT_COLOR);
     p.text(
       "please wait...",
