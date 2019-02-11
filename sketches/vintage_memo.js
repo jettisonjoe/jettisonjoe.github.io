@@ -29,6 +29,8 @@ var sketch = function (p) {
       titleLeftImg,
       titleRightImg,
       titleImg,
+      memoDogearImg,
+      memoBottomImg,
       titleText,
       font;
 
@@ -45,7 +47,7 @@ var sketch = function (p) {
     titleRightImg = p.loadImage(TITLE_RIGHT_PATH);
     titleImg = p.loadImage(TITLE_PATH);
     memoDogearImg = p.loadImage(MEMO_DOGEAR_PATH);
-    memoBottomImg == p.loadImage(MEMO_BOTTOM_PATH);
+    memoBottomImg = p.loadImage(MEMO_BOTTOM_PATH);
 
     titleText = url.searchParams.get("title");
     font = p.loadFont(FONT_PATH);
