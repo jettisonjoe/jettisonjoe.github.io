@@ -30,9 +30,6 @@ var sketch = function (p) {
   };
 
   p.draw = function () {
-    if (p.frameCount > 300) {
-      p.noLoop();
-    }
     p.fill(FONT_COLOR);
     p.text(
       "please wait...",
@@ -44,7 +41,6 @@ var sketch = function (p) {
   };
 
   p.windowResized = function () {
-    p.loop();
     p.resizeCanvas(p.windowWidth, p.windowHeight);
   };
 }
