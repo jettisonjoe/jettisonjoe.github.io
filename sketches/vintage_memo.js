@@ -15,7 +15,8 @@ var sketch = function (p) {
   const TITLE_LEFT_PATH = 'assets/img/vintage_win_border_title_left.png';
   const TITLE_RIGHT_PATH = 'assets/img/vintage_win_border_title_right.png';
   const TITLE_PATH = 'assets/img/vintage_win_border_title.png';
-  const MEMO_PATH = 'assets/img/vintage_memo_page.png';
+  const MEMO_DOGEAR_PATH = 'assets/img/vintage_memo_dogear.png';
+  const MEMO_BOTTOM_PATH = 'assets/img/vintage_memo_bottom.png';
 
   var topLeftImg,
       topRightImg,
@@ -43,7 +44,8 @@ var sketch = function (p) {
     titleLeftImg = p.loadImage(TITLE_LEFT_PATH);
     titleRightImg = p.loadImage(TITLE_RIGHT_PATH);
     titleImg = p.loadImage(TITLE_PATH);
-    memoImg = p.loadImage(MEMO_PATH);
+    memoDogearImg = p.loadImage(MEMO_DOGEAR_PATH);
+    memoBottomImg == p.loadImage(MEMO_BOTTOM_PATH);
 
     titleText = url.searchParams.get("title");
     font = p.loadFont(FONT_PATH);
@@ -55,8 +57,6 @@ var sketch = function (p) {
   };
 
   p.draw = function () {
-    p.noLoop();
-
     p.background("#eee8d5");
     p.image(topLeftImg, 0, 0);
     p.image(topRightImg, p.windowWidth - topRightImg.width, 0);
@@ -84,11 +84,14 @@ var sketch = function (p) {
             topRightImg.height,
             leftSideImg.width,
             p.windowHeight - topRightImg.height - bottomRightImg.height);
-    p.image(memoImg,
+    p.image(memoDogearImg,
             leftSideImg.width,
-            p.windowHeight - bottomImg.height - memoImg.height,
+            p.windowHeight - bottomImg.height - memoDogearImg.height);
+    p.image(memoBottomImg,
+            leftSideImg.width,
+            p.windowHeight - bottomImg.height - memoBottomImg.height,
             p.windowWidth - leftSideImg.width - rightSideImg.width,
-            memoImg.height);
+            memoDogearBottomImg.height);
 
     if (titleText) {
       var titleSidesWidth = titleLeftImg.width + titleRightImg.width;
@@ -119,6 +122,5 @@ var sketch = function (p) {
 
   p.windowResized = function () {
     p.resizeCanvas(p.windowWidth, p.windowHeight);
-    p.loop();
   };
 }
