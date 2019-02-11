@@ -29,9 +29,6 @@ var sketch = function (p) {
   };
 
   p.draw = function () {
-    if (p.frameCount > 300) {
-      p.noLoop();
-    }
     p.background(BG_COLOR);
     p.fill(FONT_COLOR);
     p.text(
@@ -44,7 +41,6 @@ var sketch = function (p) {
   };
 
   p.windowResized = function () {
-    p.loop();
     p.resizeCanvas(p.windowWidth, p.windowHeight);
   };
 }
