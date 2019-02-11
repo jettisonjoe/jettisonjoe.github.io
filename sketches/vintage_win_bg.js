@@ -23,13 +23,16 @@ var sketch = function (p) {
     p.createCanvas(p.windowWidth, p.windowHeight);
     p.imageMode(p.CORNER);
     p.noStroke();
-    p.background(BG_COLOR);
     p.textFont(font);
     p.textSize(FONT_SIZE);
     p.textAlign(p.CENTER);
   };
 
   p.draw = function () {
+    if (p.frameCount > 300) {
+      p.noLoop();
+    }
+    p.background(BG_COLOR);
     p.fill(FONT_COLOR);
     p.text(
       "please wait...",
@@ -41,6 +44,7 @@ var sketch = function (p) {
   };
 
   p.windowResized = function () {
+    p.loop();
     p.resizeCanvas(p.windowWidth, p.windowHeight);
   };
 }
