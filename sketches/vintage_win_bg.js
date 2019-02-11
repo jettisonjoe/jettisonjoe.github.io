@@ -31,14 +31,14 @@ var sketch = function (p) {
 
   p.draw = function () {
     p.noLoop();
-    loadingBarImg.position(
-        p.windowWidth/2 - loadingBarImg.width/2,
-        p.windowHeight/2 - loadingBarImg.height/2);
     p.fill(FONT_COLOR);
     p.text(
       "please wait...",
       p.windowWidth/2,
       p.windowHeight/2 + loadingBarImg.height + FONT_SIZE);
+        loadingBarImg.position(
+        p.windowWidth/2 - loadingBarImg.width/2,
+        p.windowHeight/2 - loadingBarImg.height/2);
   };
 
   p.windowResized = function () {
