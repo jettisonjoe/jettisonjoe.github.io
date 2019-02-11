@@ -93,7 +93,7 @@ var sketch = function (p) {
             leftSideImg.width,
             p.windowHeight - bottomImg.height - memoBottomImg.height,
             p.windowWidth - leftSideImg.width - rightSideImg.width,
-            memoDogearBottomImg.height);
+            memoBottomImg.height);
 
     if (titleText) {
       var titleSidesWidth = titleLeftImg.width + titleRightImg.width;
