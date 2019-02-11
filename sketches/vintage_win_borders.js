@@ -53,7 +53,9 @@ var sketch = function (p) {
   };
 
   p.draw = function () {
-    p.noLoop();
+    if (p.frameCount > 300) {
+      p.noLoop();
+    }
 
     p.image(topLeftImg, 0, 0);
     p.image(topRightImg, p.windowWidth - topRightImg.width, 0);
