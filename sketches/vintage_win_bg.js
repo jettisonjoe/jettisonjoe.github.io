@@ -30,6 +30,7 @@ var sketch = function (p) {
   };
 
   p.draw = function () {
+    p.noLoop();
     loadingBarImg.position(
         p.windowWidth/2 - loadingBarImg.width/2,
         p.windowHeight/2 - loadingBarImg.height/2);
@@ -41,6 +42,7 @@ var sketch = function (p) {
   };
 
   p.windowResized = function () {
+    p.loop();
     p.resizeCanvas(p.windowWidth, p.windowHeight);
   };
 }
