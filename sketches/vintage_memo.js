@@ -90,7 +90,7 @@ var sketch = function (p) {
             leftSideImg.width,
             p.windowHeight - bottomImg.height - memoDogearImg.height);
     p.image(memoBottomImg,
-            leftSideImg.width,
+            leftSideImg.width + memoDogearImg.width,
             p.windowHeight - bottomImg.height - memoBottomImg.height,
             p.windowWidth - leftSideImg.width - rightSideImg.width,
             memoBottomImg.height);
