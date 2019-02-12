@@ -15,7 +15,7 @@ var sketch = function (p) {
       bottomRightImg,
       bottomImg,
       leftSideImg,
-      rightSideImg,
+      rightSideImg;
 
   p.preload = function () {
     topLeftImg = p.loadImage(TOP_LEFT_PATH);
