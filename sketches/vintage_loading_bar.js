@@ -7,14 +7,13 @@ var sketch = function (p) {
   const FONT_COLOR = '#073642';
   const FONT_SIZE = 33;
 
-  const ICON_SIZE = 112;
-  const ICON_MARGIN = 80;
-  const NUM_ICONS = 2;
-  const TEXT_OFFSET = 40;
+  const BORDER_SIZE = 4;
+  const SHADOW_SIZE = 8;
 
   const LOADING_BAR_PATH = 'assets/img/loading_bar.gif'
 
-  var font, loadingBarImg;
+  var font,
+      loadingBarImg;
 
   p.preload = function () {
     font = p.loadFont(FONT_PATH);
@@ -32,17 +31,26 @@ var sketch = function (p) {
 
   p.draw = function () {
     p.fill(SHADOW_COLOR);
-    p.rect(6, 6, p.windowWidth - 6, p.windowHeight - 6);
+    p.rect(
+        SHADOW_SIZE, SHADOW_SIZE,
+        p.windowWidth - SHADOW_SIZE,
+        p.windowHeight - SHADOW_SIZE);
     p.fill(OUTLINE_COLOR);
-    p.rect(0, 0, p.windowWidth - 6, p.windowHeight - 6);
+    p.rect(
+        0, 0,
+        p.windowWidth - SHADOW_SIZE,
+        p.windowHeight - SHADOW_SIZE);
     p.fill(BG_COLOR);
-    p.rect(4, 4, p.windowWidth - 16, p.windowHeight - 16);
+    p.rect(
+        BORDER_SIZE, BORDER_SIZE,
+        p.windowWidth - SHADOW_SIZE - 2 * BORDER_SIZE,
+        p.windowHeight - SHADOW_SIZE - 2 * BORDER_SIZE);
     p.fill(FONT_COLOR);
     p.text(
       "please wait...",
       p.windowWidth/2,
       p.windowHeight/2 + loadingBarImg.height + FONT_SIZE);
-        loadingBarImg.position(
+    loadingBarImg.position(
         p.windowWidth/2 - loadingBarImg.width/2,
         p.windowHeight/2 - loadingBarImg.height/2);
   };
