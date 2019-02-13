@@ -1,5 +1,7 @@
 var sketch = function (p) {
   const BG_COLOR = '#839496';
+  const OUTLINE_COLOR = "#073642";
+  const SHADOW_COLOR = '#002b36';
 
   const FONT_PATH = 'assets/fonts/gohufont-uni-11.ttf';
   const FONT_COLOR = '#073642';
@@ -29,7 +31,12 @@ var sketch = function (p) {
   };
 
   p.draw = function () {
-    p.background(BG_COLOR);
+    p.fill(SHADOW_COLOR);
+    p.rect(6, 6, p.windowWidth - 6, p.windowHeight - 6);
+    p.fill(OUTLINE_COLOR);
+    p.rect(0, 0, p.windowWidth - 6, p.windowHeight - 6);
+    p.fill(BG_COLOR);
+    p.rect(4, 4, p.windowWidth - 16, p.windowHeight - 16);
     p.fill(FONT_COLOR);
     p.text(
       "please wait...",
