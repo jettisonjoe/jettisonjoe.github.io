@@ -1,12 +1,14 @@
 var sketch = function(p) {
-  const BASE_URL = 'https://timercheck.io';
+  const BASE_URL = 'https://api.keyvalue.xyz';
 
   var timerId,
+      token,
       command,
       argument;
 
   p.preload = function() {
-    timerId = url.searchParams.get('id');
+    key = url.searchParams.get('id');
+    token = url.searchParams.get('token');
     command = url.searchParams.get('cmd');
     argument = url.searchParams.get('arg');
   };
@@ -17,8 +19,9 @@ var sketch = function(p) {
     p.noLoop();
     switch (command) {
       case 'set':
-        p.loadJSON(
-            BASE_URL + '/' + timerId + '/' + argument,
+        p.httpPost(
+            BASE_URL + '/' + token + '/' + key,
+            parseInt(argument),
             function(response) {});
         break;
       case 'add':
