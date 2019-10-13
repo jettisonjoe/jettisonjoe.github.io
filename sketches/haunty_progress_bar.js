@@ -2,12 +2,7 @@ class Bubble {
   static get SCALAR() { return 1/12000; }
   static get SPEED() { return 1.2; }
 
-  static preload(p) {
-    Bubble.OUTER_FILL = p.color(255, 255, 255, 90);
-    Bubble.INNER_FILL = p.color(254, 21, 107);
-  }
-
-  constructor(p, x, y, k) {
+  constructor(p, x, y, k, outerFill, innerFill) {
     this.pos = p.createVector(x, y);
     this.popped = false;
     this._left = 0;
@@ -18,6 +13,8 @@ class Bubble {
     this._t = 0;
     this._innerR = 0;
     this._outerR = 0;
+    this._outerFill = p.color(outerFill);
+    this._innerFill = p.color(innerFill);
     this._offset = p.createVector(1, 1);
     this._offset.heading(p.random(0, 2*Math.PI));
   }
@@ -60,11 +57,11 @@ class Bubble {
         (this._outerR - this._innerR) * Bubble.SCALAR * this._k);
     p.ellipseMode(p.RADIUS);
     p.noStroke();
-    p.fill(Bubble.OUTER_FILL);
+    p.fill(this._outerFill);
     p.ellipse(this.pos.x, this.pos.y,
               this._outerR * Bubble.SCALAR * this._k,
               this._outerR * Bubble.SCALAR * this._k);
-    p.fill(Bubble.INNER_FILL);
+    p.fill(this._innerFill);
     p.ellipse(this.pos.x + this._offset.x, this.pos.y + this._offset.y,
               this._innerR * Bubble.SCALAR * this._k,
               this._innerR * Bubble.SCALAR * this._k);
@@ -72,11 +69,13 @@ class Bubble {
 }
 
 class BubbleSystem {
-  constructor(p, x, y, w, h, r, n) {
+  constructor(p, x, y, w, h, r, n, colorString) {
     this.pos = p.createVector(x, y);
     this.size = p.createVector(w, h);
     this._r = r;
     this._n = n;
+    this._outerFill = chroma(colorString).brighten(1.5).hex();
+    this._innerFill = colorString;
     this._bubbles = new Array(n);
     for (var i = 0; i < this._n; i++) {
       this._bubbles[i] = this._makeNewBubble(p);
@@ -84,7 +83,6 @@ class BubbleSystem {
   }
 
   draw(p) {
-    // if (p.frameCount > 200) { debugger; }
     for (var i = 0; i < this._n; i++) {
       if (this._bubbles[i].popped) {
           this._bubbles[i] = this._makeNewBubble(p);
@@ -100,7 +98,9 @@ class BubbleSystem {
         p,
         p.random(this.pos.x, this.pos.x + this.size.x),
         p.random(this.pos.y, this.pos.y + this.size.y),
-        this._n);
+        this._n,
+        this._outerFill,
+        this._innerFill);
   }
 }
 
@@ -114,8 +114,6 @@ class HauntyProgressBar {
   static get FONT_SIZE_LARGE() { return 50; }
   static get FONT_SIZE_SMALL() { return 24; }
   static get FILL_RATE_PER_S() { return 0.05; }
-  static get RED_COLOR_STRING() { return 'rgb(254,21,107)'; }
-  static get WHITE_COLOR_STRING() { return 'rgb(255,255,226)'; }
 
   /**
   * Initialize the HauntyProgressBar class by preloading variuos resources.
@@ -126,19 +124,20 @@ class HauntyProgressBar {
     HauntyProgressBar.JAR_BG = p.loadImage('assets/img/haunty_jar_bg.png');
     HauntyProgressBar.FONT = p.loadFont(
         'assets/fonts/PermanentMarker-Regular.ttf');
-    Bubble.preload(p);
   }
 
-  constructor(p, x, y) {
+  constructor(p, x, y, colorString) {
     // super();
     this.pos = p.createVector(x, y);
-    this.fluidPos = p.createVector(x + 16, y + 75);
-    this.size = p.createVector(275, 297);
+    this.fluidPos = p.createVector(x + 15, y + 75);
+    this.size = p.createVector(276, 297);
     this.goal = null;
     this._progress = 0;
     this._displayedProgress = null;
+    this._fluidColor = colorString
     this._bubbles = new BubbleSystem(
-        p, this.pos.x, this.pos.y, this.size.x, this.size.y, 1.5, 12);
+        p, this.pos.x, this.pos.y, this.size.x, this.size.y, 1.5, 12,
+        this._fluidColor);
   }
 
   set progress(amount) {
@@ -173,7 +172,7 @@ class HauntyProgressBar {
 
     // Draw the progress bar.
     p.noStroke();
-    p.fill(HauntyProgressBar.RED_COLOR_STRING);
+    p.fill(this._fluidColor);
     var multiplier = p.min(this._displayedProgress / this.goal, 1);
     var fillHeight = this.size.y * multiplier;
     var fillY = this.fluidPos.y + (this.size.y - fillHeight);
@@ -202,24 +201,25 @@ class HauntyProgressBar {
 
 var sketch = function (p) {
   var campaign,
-      progressBar;
+      progressBar,
+      fluidColor;
 
   p.preload = function () {
     HauntyProgressBar.preload(p);
     let campaignName = url.searchParams.get('campaign') || 'scrato';
+    fluidColor = url.searchParams.get('fluid') || 'fe156b';
     campaign = new ScratoCampaign(campaignName, 6000);
     campaign.update(p); // Initial update.
   }
 
   p.setup = function () {
     p.createCanvas(p.windowWidth, p.windowHeight);
-    progressBar = new HauntyProgressBar(p, 10, 10);
+    progressBar = new HauntyProgressBar(p, 10, 10, '#' + fluidColor);
     p.rectMode(p.CORNER);
   };
 
   p.draw = function () {
     p.clear();
-    // p.background(16);
 
     campaign.update(p);
     if (progressBar.goal == null) {
@@ -227,12 +227,6 @@ var sketch = function (p) {
     }
     progressBar.progress = campaign.raised;
     progressBar.draw(p);
-
-    // DEBUG
-    // if (p.frameCount == 100) {
-    //   progressBar.progress = progressBar.progress + 100;
-    //   progressBar.progress = progressBar.progress + 300;
-    // }
   };
 
   p.windowResized = function () {

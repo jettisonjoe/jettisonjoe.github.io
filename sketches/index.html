@@ -19,16 +19,16 @@
     <div id="p5-sketch"></div>
     <script type="text/javascript">
         var scriptTag = document.createElement('script');
-            var url = new URL(window.location.href);
-            var sketch_name = url.searchParams.get("sketch");
-            console.log(sketch_name);
-            scriptTag.src = sketch_name + ".js";
+        var url = new URL(window.location.href);
+        var sketch_name = url.searchParams.get("sketch");
+        console.log(sketch_name);
+        scriptTag.src = sketch_name + ".js";
 
-            scriptTag.onload = function() {
-                var p5sketch = new p5(sketch, 'p5-sketch');
-            }
+        scriptTag.onload = function() {
+            var p5sketch = new p5(sketch, 'p5-sketch');
+        }
 
-            document.body.appendChild(scriptTag);
+        document.body.appendChild(scriptTag);
     </script>
   </body>
 </html>
