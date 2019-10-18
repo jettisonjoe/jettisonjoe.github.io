@@ -143,7 +143,7 @@ class HauntyProgressBar {
   }
 
   set progress(amount) {
-    if (amount && this._progress < amount) {
+    if (amount === 0 || amount && this._progress < amount) {
       this._progress = amount;
       if (this._displayedProgress === null) {
         // The first time progress is really set, don't animate.
