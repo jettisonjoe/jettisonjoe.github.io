@@ -48,6 +48,8 @@ class ScrollingGradient {
   static get SCROLL_SPEED() { return 0.35; }
 
   constructor(p, w, h, gradientHeight, colorScale) {
+    this._speed = parseFloat(url.searchParams.get('speed')) || 1;
+
     this.size = p.createVector(p.ceil(w), p.ceil(h));
     this._scroll = 0;
     this._maxScroll = 2 * p.ceil(gradientHeight);
@@ -124,6 +126,24 @@ function createRandomBalancedScale(numColors, modeString) {
 }
 
 
+function colorScaleFromString(colorScaleString, modeString) {
+    let colorStrings = colorScaleString.split(',');
+    let colors = [];
+    for (var i = 0; i < colorStrings.length; i++) {
+      colors.push(chroma('#' + colorStrings[i]));
+  }
+  colors.sort(function(a, b) {
+    return a.get('hsl.l') - b.get('hsl.l');
+  });
+  if (Math.random() > 0.5) { colors.reverse(); }
+  let bez = chroma.bezier(colors);
+  if (modeString) {
+    return chroma.scale(bez).mode(modeString);
+  }
+  return chroma.scale(bez).mode('lrgb').padding(0.1);
+}
+
+
 class Water {
   constructor(p, sourceImage, h) {
     this._sourceImage = sourceImage;
@@ -150,5 +170,43 @@ class Water {
     p.noStroke();
     p.fill(0, 15, 30, 40);
     p.rect(posX, posY, this._image.width, this._image.height);
+  }
+}
+
+
+class Mist {
+  static get NOISE_SCALE() { return 0.1; }
+
+  constructor(p, w, h, size, speed, colorString) {
+    this._rowCount = Math.ceil(h / size);
+    this._columnCount = Math.ceil(w / size);
+    this._size = size;
+    this._speed = speed;
+    this._t = 0;
+    this._c = chroma(colorString).rgb();
+  }
+
+  drawAt(p, posX, posY) {
+    p.push();
+    p.translate(posX, posY);
+    p.noStroke();
+    let yNoise = this._t;
+    for (let row = 0; row < this._rowCount; row++) {
+      let xNoise = this._t;
+      for (let col = 0; col < this._columnCount; col++) {
+        let x = col * this._size;
+        let y = row * this._size;
+        p.fill(
+            this._c[0],
+            this._c[1],
+            this._c[2],
+            p.noise(xNoise, yNoise) * 255)
+        p.rect(x, y, this._size, this._size);
+        xNoise += Mist.NOISE_SCALE;
+      }
+      yNoise += Mist.NOISE_SCALE;
+    }
+    p.pop();
+    this._t += 0.01 * this._speed;
   }
 }

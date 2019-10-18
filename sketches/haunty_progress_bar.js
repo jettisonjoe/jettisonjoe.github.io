@@ -1,6 +1,8 @@
 class Bubble {
   static get SCALAR() { return 1/12000; }
-  static get SPEED() { return 1.2; }
+  static get SPEED() { return 3; }
+  static get INNER_EXP_RATE() { return 5; }
+  static get OUTER_EXP_RATE() { return 250; }
 
   constructor(p, x, y, k, outerFill, innerFill) {
     this.pos = p.createVector(x, y);
@@ -42,8 +44,8 @@ class Bubble {
 
     // expand
     this._t++;
-    this._innerR = (this._t * this._t);
-    this._outerR = (this._t * 100);
+    this._innerR = (this._t * this._t * Bubble.INNER_EXP_RATE);
+    this._outerR = (this._t * Bubble.OUTER_EXP_RATE);
 
     // maybe pop
     if (this._innerR >= this._outerR || !this.isInBounds()) {
@@ -143,7 +145,7 @@ class HauntyProgressBar {
   set progress(amount) {
     if (amount && this._progress < amount) {
       this._progress = amount;
-      if (this._displayedProgress == null) {
+      if (this._displayedProgress === null) {
         // The first time progress is really set, don't animate.
         this._displayedProgress = this._progress;
       }
@@ -160,7 +162,7 @@ class HauntyProgressBar {
   */
   draw(p) {
     // Cannot compute any of the geometry without a goal amount.
-    if (this.goal == null || this._displayedProgress == null) { return; }
+    if (this.goal === null || this._displayedProgress === null) { return; }
     if (this._displayedProgress < this._progress) {
       var fractionToFill = HauntyProgressBar.FILL_RATE_PER_S / p.frameRate();
       this._displayedProgress = p.min(
@@ -206,23 +208,31 @@ var sketch = function (p) {
 
   p.preload = function () {
     HauntyProgressBar.preload(p);
+    let type = url.searchParams.get('campaignType') || 'scrato';
     let campaignName = url.searchParams.get('campaign') || 'scrato';
     fluidColor = url.searchParams.get('fluid') || 'fe156b';
-    campaign = new ScratoCampaign(campaignName, 6000);
-    campaign.update(p); // Initial update.
+    if (type === 'scrato') {
+      campaign = new ScratoCampaign(campaignName, 6000);
+    } else if (type === 'tiltify') {
+      campaign = new TiltifyCampaign(
+          campaignName,
+          6000,
+          'dc562006d8e12541ee7f83e33b449e5cb84dffcf1aa9c2979b4c6131e4992891');
+    }
   }
 
   p.setup = function () {
     p.createCanvas(p.windowWidth, p.windowHeight);
     progressBar = new HauntyProgressBar(p, 10, 10, '#' + fluidColor);
     p.rectMode(p.CORNER);
+    campaign.update(p); // Initial update.
   };
 
   p.draw = function () {
     p.clear();
 
     campaign.update(p);
-    if (progressBar.goal == null) {
+    if (progressBar.goal === null) {
       progressBar.goal = campaign.goal;
     }
     progressBar.progress = campaign.raised;
