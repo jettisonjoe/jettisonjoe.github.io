@@ -110,9 +110,6 @@ class TiltifyCampaign {
 /**
 * Milestone data for one fundraiser campaign server by the Tiltify API.
 *
-* Note: The Tiltify API v3 apparently got rid of milestones, so we simulate
-* them here by duplicating each milestone as an inactive "challenge" instead.
-*
 * @param {string} campaignId ID of the campaign to track.
 * @param {number} rateLimitMs  Minimum milliseconds between requests to server.
 * @param {string} token Tiltify API Application Access Token.
@@ -122,7 +119,7 @@ class TiltifyMilestones {
 
   constructor(campaignId, rateLimitMs, token) {
     this.campaignUrl = TiltifyCampaign.BASE_URL + campaignId;
-    this.milestoneUrl = TiltifyCampaign.BASE_URL + campaignId + '/challenges';
+    this.milestoneUrl = TiltifyCampaign.BASE_URL + campaignId + '/milestones';
     this.lastUpdate = null;
     this._next = null;
     this._rateLimitMs = rateLimitMs;
