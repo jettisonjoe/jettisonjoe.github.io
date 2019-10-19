@@ -170,8 +170,9 @@ class TiltifyMilestones {
                 let candidate = this._milestones.data[0];
                 for (let i = 1; i < this._milestones.data.length; i++) {
                   let amt = this._milestones.data[i].amount;
-                  if (amt > campaign_obj.data.amountRaised &&
-                      amt < candidate.amount) {
+                  let raised = campaign_obj.data.amountRaised;
+                  if (amt > raised &&
+                      (candidate.amount < raised || amt < candidate.amount)) {
                     candidate = this._milestones.data[i];
                   }
                 }
