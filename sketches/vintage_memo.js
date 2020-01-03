@@ -59,6 +59,7 @@ var sketch = function (p) {
   };
 
   p.draw = function () {
+    p.noLoop();
     p.background("#eee8d5");
     p.image(topLeftImg, 0, 0);
     p.image(topRightImg, p.windowWidth - topRightImg.width, 0);
@@ -125,5 +126,6 @@ var sketch = function (p) {
 
   p.windowResized = function () {
     p.resizeCanvas(p.windowWidth, p.windowHeight);
+    p.Loop();
   };
 }
