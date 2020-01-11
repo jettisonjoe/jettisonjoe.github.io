@@ -30,6 +30,7 @@ var sketch = function (p) {
   };
 
   p.draw = function () {
+    p.noLoop();
     p.fill(SHADOW_COLOR);
     p.rect(
         SHADOW_SIZE, SHADOW_SIZE,
@@ -57,5 +58,6 @@ var sketch = function (p) {
 
   p.windowResized = function () {
     p.resizeCanvas(p.windowWidth, p.windowHeight);
+    p.loop();
   };
 }

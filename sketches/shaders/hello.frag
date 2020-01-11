@@ -1,4 +1,4 @@
-// Necessary boiler plate (according to the interwebs).
+// Set float precision to medium.
 #ifdef GL_ES
 precision mediump float;
 #endif
