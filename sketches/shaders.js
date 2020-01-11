@@ -1,5 +1,6 @@
 var sketch = function(p) {
   const SHADER_DIR = 'shaders/';
+  const TIME_SCALE = 0.01;
 
   let theShader;
 
@@ -16,6 +17,8 @@ var sketch = function(p) {
   };
 
   p.draw = function() {
+    theShader.setUniform('u_resolution', [p.width, p.height]);
+    theShader.setUniform('u_time', p.frameCount * TIME_SCALE);
     p.shader(theShader);
     p.rect(0, 0, p.width, p.height);
   };
