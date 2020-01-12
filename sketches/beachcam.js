@@ -1,5 +1,8 @@
 var sketch = function (p) {
-  var gradient,
+  const WATER_RATIO = 0.3;
+  const SCALE_DIVISOR = 3;
+  
+  let gradient,
       starfield,
       foreground,
       buffer,
@@ -12,10 +15,14 @@ var sketch = function (p) {
 
   p.setup = function () {
     p.createCanvas(p.windowWidth, p.windowHeight);
-    let skyWidth = Math.ceil(p.windowWidth / 3);
-    let skyHeight = Math.ceil(0.7 * p.windowHeight / 3);
+    let skyWidth = Math.ceil(p.windowWidth / SCALE_DIVISOR);
+    let skyHeight = Math.ceil(
+        ((1 - WATER_RATIO) * p.windowHeight) / SCALE_DIVISOR);
     buffer = p.createGraphics(skyWidth, skyHeight);
-    water = new Water(p, buffer, Math.ceil(0.3 * p.windowHeight / 3) + 1);
+    water = new Water(
+        p,
+        buffer,
+        Math.ceil(WATER_RATIO * p.windowHeight / SCALE_DIVISOR) + 1);
     gradient = new ScrollingGradient(
         p,
         skyWidth, skyHeight,
