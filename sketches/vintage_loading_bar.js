@@ -17,7 +17,7 @@ var sketch = function (p) {
 
   p.preload = function () {
     font = p.loadFont(FONT_PATH);
-    loadingBarImg = p.createImg(LOADING_BAR_PATH)
+    loadingBarImg = p.createImg(LOADING_BAR_PATH);
   }
 
   p.setup = function () {
@@ -30,7 +30,11 @@ var sketch = function (p) {
   };
 
   p.draw = function () {
-    p.noLoop();
+    // For unknown reasons, the image size computes to zero for the first dozen
+    // or so frames. Maybe one loop through the animation.
+    if (p.frameCount > 120) {
+      p.noLoop();
+    }
     p.fill(SHADOW_COLOR);
     p.rect(
         SHADOW_SIZE, SHADOW_SIZE,
@@ -40,7 +44,7 @@ var sketch = function (p) {
     p.rect(
         0, 0,
         p.windowWidth - SHADOW_SIZE,
-        p.windowHeight - SHADOW_SIZE);
+        p.windowHaeight - SHADOW_SIZE);
     p.fill(BG_COLOR);
     p.rect(
         BORDER_SIZE, BORDER_SIZE,
