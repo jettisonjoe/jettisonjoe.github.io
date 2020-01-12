@@ -37,17 +37,20 @@ var sketch = function (p) {
     }
     p.fill(SHADOW_COLOR);
     p.rect(
-        SHADOW_SIZE, SHADOW_SIZE,
+        SHADOW_SIZE,
+        SHADOW_SIZE,
         p.windowWidth - SHADOW_SIZE,
         p.windowHeight - SHADOW_SIZE);
     p.fill(OUTLINE_COLOR);
     p.rect(
-        0, 0,
+        0,
+        0,
         p.windowWidth - SHADOW_SIZE,
-        p.windowHaeight - SHADOW_SIZE);
+        p.windowHeight - SHADOW_SIZE);
     p.fill(BG_COLOR);
     p.rect(
-        BORDER_SIZE, BORDER_SIZE,
+        BORDER_SIZE,
+        BORDER_SIZE,
         p.windowWidth - SHADOW_SIZE - 2 * BORDER_SIZE,
         p.windowHeight - SHADOW_SIZE - 2 * BORDER_SIZE);
     p.fill(FONT_COLOR);
