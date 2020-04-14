@@ -1,4 +1,3 @@
-// Set float precision to medium.
 #ifdef GL_ES
 precision mediump float;
 #endif
