@@ -28,7 +28,9 @@ var sketch = function (p) {
       titleRightImg,
       titleImg,
       titleText,
-      font;
+      font,
+      width,
+      height;
 
   p.preload = function () {
     topLeftImg = p.loadImage(TOP_LEFT_PATH);
@@ -45,57 +47,62 @@ var sketch = function (p) {
 
     titleText = url.searchParams.get("title");
     font = p.loadFont(FONT_PATH);
+
+    width = parseInt(url.searchParams.get('width'));
+    height = parseInt(url.searchParams.get('height'));
   }
 
   p.setup = function () {
-    p.createCanvas(p.windowWidth, p.windowHeight);
+    width = width || p.windowWidth;
+    height = height || p.windowHeight;
+    p.createCanvas(width, height);
     p.imageMode(p.CORNER);
   };
 
   p.draw = function () {
     p.noLoop();
     p.image(topLeftImg, 0, 0);
-    p.image(topRightImg, p.windowWidth - topRightImg.width, 0);
+    p.image(topRightImg, width - topRightImg.width, 0);
     p.image(topImg,
             topLeftImg.width,
             0,
-            p.windowWidth - topRightImg.width - topLeftImg.width,
+            width - topRightImg.width - topLeftImg.width,
             topImg.height);
-    p.image(bottomLeftImg, 0, p.windowHeight - bottomLeftImg.height);
+    p.image(bottomLeftImg, 0, height - bottomLeftImg.height);
     p.image(bottomRightImg,
-            p.windowWidth - bottomRightImg.width,
-            p.windowHeight - bottomRightImg.height);
+            width - bottomRightImg.width,
+            height - bottomRightImg.height);
     p.image(bottomImg,
             bottomLeftImg.width,
-            p.windowHeight - bottomImg.height,
-            p.windowWidth - bottomLeftImg.width - bottomRightImg.width,
+            height - bottomImg.height,
+            width - bottomLeftImg.width - bottomRightImg.width,
             bottomImg.height);
     p.image(leftSideImg,
             0,
             topLeftImg.height,
             leftSideImg.width,
-            p.windowHeight - topLeftImg.height - bottomLeftImg.height);
+            height - topLeftImg.height - bottomLeftImg.height);
     p.image(rightSideImg,
-            p.windowWidth - leftSideImg.width,
+            width - leftSideImg.width,
             topRightImg.height,
             leftSideImg.width,
-            p.windowHeight - topRightImg.height - bottomRightImg.height);
+            height - topRightImg.height - bottomRightImg.height);
 
     if (titleText) {
       var titleSidesWidth = titleLeftImg.width + titleRightImg.width;
       var topCornersWidth = topLeftImg.width + topRightImg.width;
-      var titleMax = p.windowWidth - titleSidesWidth - topCornersWidth;
+      var titleMax = width - titleSidesWidth - topCornersWidth;
       var titleWidth = (font.textBounds(titleText, 0, 0, FONT_SIZE).w +
                         TITLE_MARGIN * 2);
       if (titleWidth <= titleMax) {
         p.image(titleLeftImg,
-                p.windowWidth/2 - titleWidth/2 - titleLeftImg.width,
+                width/2 - titleWidth/2 - titleLeftImg.width,
                 0);
         p.image(titleRightImg,
-                p.windowWidth/2 + titleWidth/2,
+                width/2 + titleWidth/2,
                 0);
         p.image(titleImg,
-                p.windowWidth/2 - titleWidth/2,
+                width/2 - titleWidth/2,
                 0,
                 titleWidth,
                 titleImg.height);
@@ -103,13 +110,13 @@ var sketch = function (p) {
         p.textFont(font);
         p.textSize(FONT_SIZE);
         p.textAlign(p.CENTER);
-        p.text(titleText, p.windowWidth/2, 30);
+        p.text(titleText, width/2, 30);
       }
     }
   };
 
   p.windowResized = function () {
-    p.resizeCanvas(p.windowWidth, p.windowHeight);
+    p.resizeCanvas(width, height);
     p.Loop();
   };
 }

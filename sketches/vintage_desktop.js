@@ -20,7 +20,7 @@ var sketch = function (p) {
     'assets/img/disk_icon.png',
   ];
 
-  var font, selectedIconIdx;
+  var font, selectedIconIdx, width, height;
   var xCoords = [];
   var yCoords = [];
   var icons = [];
@@ -33,16 +33,20 @@ var sketch = function (p) {
     }
 
     selectedIconIdx = url.searchParams.get('select') || 0;
+    width = parseInt(url.searchParams.get('width'));
+    height = parseInt(url.searchParams.get('height'));
   }
 
   p.setup = function () {
-    p.createCanvas(p.windowWidth, p.windowHeight);
+    width = width || p.windowWidth;
+    height = height || p.windowHeight;
+    p.createCanvas(width, height);
     p.imageMode(p.CORNER);
 
-    for (var i = 0; i < p.windowWidth; i += ICON_SIZE + ICON_MARGIN) {
-      for (var j = 0; j < p.windowHeight; j += ICON_SIZE + ICON_MARGIN) {
-        yCoords.push(p.windowHeight - i - ICON_SIZE - ICON_MARGIN);
-        xCoords.push(p.windowWidth - j - ICON_SIZE - ICON_MARGIN);
+    for (var i = 0; i < width; i += ICON_SIZE + ICON_MARGIN) {
+      for (var j = 0; j < height; j += ICON_SIZE + ICON_MARGIN) {
+        yCoords.push(height - i - ICON_SIZE - ICON_MARGIN);
+        xCoords.push(width - j - ICON_SIZE - ICON_MARGIN);
       }
     }
   };
@@ -56,8 +60,8 @@ var sketch = function (p) {
     p.textSize(FONT_SIZE);
     p.textAlign(p.CENTER);
 
-    for (let y = 0; y < p.windowHeight; y += bg_img.height) {
-      for (let x = 0; x < p.windowWidth; x += bg_img.width) {
+    for (let y = 0; y < height; y += bg_img.height) {
+      for (let x = 0; x < width; x += bg_img.width) {
         p.image(bg_img, x, y);
       }
     }
@@ -84,7 +88,7 @@ var sketch = function (p) {
   };
 
   p.windowResized = function () {
-    p.resizeCanvas(p.windowWidth, p.windowHeight);
+    p.resizeCanvas(width, height);
     p.loop();
   };
 }
