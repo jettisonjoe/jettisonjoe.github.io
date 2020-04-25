@@ -46,6 +46,11 @@ var sketch = function (p) {
   };
 
   p.draw = function () {
+    // Fade-in.
+    if (p.frameCount <= 255) {
+      p.tint(255, p.frameCount);
+    }
+
     gradient.drawAt(buffer, 0, 0);
     starfield.drawAt(buffer, 0, 0);
 
