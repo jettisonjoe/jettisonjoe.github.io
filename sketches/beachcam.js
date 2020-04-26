@@ -47,8 +47,10 @@ var sketch = function (p) {
 
   p.draw = function () {
     // Fade-in.
-    if (p.frameCount <= 255) {
-      p.tint(255, p.frameCount);
+    if (p.frameCount < 64) {
+      p.tint(255, 4 * p.frameCount);
+    } else if (p.frameCount == 64) {
+      p.noTint();
     }
 
     gradient.drawAt(buffer, 0, 0);

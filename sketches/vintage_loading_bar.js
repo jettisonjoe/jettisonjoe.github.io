@@ -13,15 +13,21 @@ var sketch = function (p) {
   const LOADING_BAR_PATH = 'assets/img/loading_bar.gif'
 
   var font,
-      loadingBarImg;
+      loadingBarImg,
+      width,
+      height;
 
   p.preload = function () {
     font = p.loadFont(FONT_PATH);
     loadingBarImg = p.createImg(LOADING_BAR_PATH);
+    width = parseInt(url.searchParams.get('width'));
+    height = parseInt(url.searchParams.get('height'));
   }
 
   p.setup = function () {
-    p.createCanvas(p.windowWidth, p.windowHeight);
+    width = width || p.windowWidth;
+    height = height || p.windowHeight;
+    p.createCanvas(width, height);
     p.imageMode(p.CORNER);
     p.noStroke();
     p.textFont(font);
@@ -39,32 +45,36 @@ var sketch = function (p) {
     p.rect(
         SHADOW_SIZE,
         SHADOW_SIZE,
-        p.windowWidth - SHADOW_SIZE,
-        p.windowHeight - SHADOW_SIZE);
+        width - SHADOW_SIZE,
+        height - SHADOW_SIZE);
     p.fill(OUTLINE_COLOR);
     p.rect(
         0,
         0,
-        p.windowWidth - SHADOW_SIZE,
-        p.windowHeight - SHADOW_SIZE);
+        width - SHADOW_SIZE,
+        height - SHADOW_SIZE);
     p.fill(BG_COLOR);
     p.rect(
         BORDER_SIZE,
         BORDER_SIZE,
-        p.windowWidth - SHADOW_SIZE - 2 * BORDER_SIZE,
-        p.windowHeight - SHADOW_SIZE - 2 * BORDER_SIZE);
+        width - SHADOW_SIZE - 2 * BORDER_SIZE,
+        height - SHADOW_SIZE - 2 * BORDER_SIZE);
     p.fill(FONT_COLOR);
     p.text(
-      "please wait...",
-      p.windowWidth/2,
-      p.windowHeight/2 + loadingBarImg.height + FONT_SIZE);
+        "please wait...",
+        width / 2,
+        height / 2 + loadingBarImg.height + FONT_SIZE);
     loadingBarImg.position(
-        p.windowWidth/2 - loadingBarImg.width/2,
-        p.windowHeight/2 - loadingBarImg.height/2);
+        width / 2 - loadingBarImg.width / 2,
+        height / 2 - loadingBarImg.height / 2);
   };
 
   p.windowResized = function () {
-    p.resizeCanvas(p.windowWidth, p.windowHeight);
+    width = parseInt(url.searchParams.get('width'));
+    height = parseInt(url.searchParams.get('height'));
+    width = width || p.windowWidth;
+    height = height || p.windowHeight;
+    p.resizeCanvas(width, height);
     p.loop();
   };
 }

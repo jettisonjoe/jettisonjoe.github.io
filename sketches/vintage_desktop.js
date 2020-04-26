@@ -88,6 +88,10 @@ var sketch = function (p) {
   };
 
   p.windowResized = function () {
+    width = parseInt(url.searchParams.get('width'));
+    height = parseInt(url.searchParams.get('height'));
+    width = width || p.windowWidth;
+    height = height || p.windowHeight;
     p.resizeCanvas(width, height);
     p.loop();
   };
